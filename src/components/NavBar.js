@@ -51,7 +51,7 @@ const Navbar = () => {
             <Link href="/favorites">Favorites ({favorites.length})</Link>
           </li>
           <li className="hover:text-white transition-colors duration-200">
-            <Link href="/About">About</Link>
+            <Link href="/about">About</Link>
           </li>
         </ul>
       </nav>
