@@ -26,9 +26,9 @@ export const AppProvider = ({ children }) => { //children es todo lo que esta de
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("/api/products"); // cambiar link cuando tenga la api
+        const res = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=eb7e3fd7272143562cec959061b5eb32`); // cambiar link cuando tenga la api
         const data = await res.json();
-        setProducts(data); // guarda los productos en el estado global
+        setProducts(data.results); // guarda los productos en el estado global
       } catch (err) {
         console.error("Error fetching products:", err); // muestra el error en consola
       }
