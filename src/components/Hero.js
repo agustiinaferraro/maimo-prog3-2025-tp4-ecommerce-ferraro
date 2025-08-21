@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useAppContext } from "@/app/context/AppContext"
 import Link from "next/link"
+import Image from "next/image"
 
 const HeroRotator = () => {
   const { products } = useAppContext() // aca traigo los productos desde el context
@@ -22,7 +23,7 @@ const HeroRotator = () => {
 
   return (
     <div className="relative w-full h-[500px] md:h-[700px] overflow-hidden">
-      <video
+      <Image
         key={currentProduct.id} //recarga el video al cambiar de disco
         src={`https://image.tmdb.org/t/p/original/${currentProduct.poster_path}`}
         autoPlay
