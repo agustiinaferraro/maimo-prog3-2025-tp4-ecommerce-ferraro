@@ -28,6 +28,7 @@ const HeroRotator = () => {
         src={`https://image.tmdb.org/t/p/original/${currentProduct.poster_path}`}
         width={500}
         height={750}
+        alt={currentProduct.title}
         autoPlay
         loop
         muted
