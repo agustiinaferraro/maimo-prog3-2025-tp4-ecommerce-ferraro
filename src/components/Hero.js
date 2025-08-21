@@ -24,7 +24,7 @@ const HeroRotator = () => {
     <div className="relative w-full h-[500px] md:h-[700px] overflow-hidden">
       <video
         key={currentProduct.id} //recarga el video al cambiar de disco
-        src={currentProduct.video} //video del disco
+        src={`https://image.tmdb.org/t/p/original/${currentProduct.poster_path}`}
         autoPlay
         loop
         muted

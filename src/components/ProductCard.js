@@ -10,7 +10,7 @@ const ProductCard = ({ product }) => {
   return (
     <div className="bg-[#111] text-white rounded-lg overflow-hidden shadow hover:shadow-lg transition relative">
       <img 
-        src={product.image} 
+        src={`https://image.tmdb.org/t/p/original/${product.poster_path}`}
         alt={product.title} 
         className="w-full h-64 object-cover"
       />
