@@ -11,7 +11,7 @@ const ProductCard = ({ product }) => {
     <div className="bg-[#111] text-white rounded-lg overflow-hidden shadow hover:shadow-lg transition relative">
       <img 
         src={product.image} 
-        alt={product.name} 
+        alt={product.title} 
         className="w-full h-64 object-cover"
       />
 
@@ -24,7 +24,7 @@ const ProductCard = ({ product }) => {
       </button>
 
       <div className="p-4">
-        <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+        <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
         <p className="text-gray-300 mb-4">{product.description}</p>
         <Link href={`/product/${product.id}`}>
           <button className="px-4 py-2 bg-white text-black font-semibold rounded hover:bg-gray-200 transition">
