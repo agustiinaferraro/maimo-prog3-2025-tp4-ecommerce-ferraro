@@ -7,7 +7,7 @@ const ProductsGrid = () => {
   const { products, searchTerm } = useAppContext() //trae productos y busqueda del context
 
   const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    product.title.toLowerCase().includes(searchTerm.toLowerCase())
   )
   
 
