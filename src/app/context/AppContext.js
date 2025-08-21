@@ -1,0 +1,49 @@
+"use client";                          
+
+import { createContext, useContext, useState, useEffect } from "react"; 
+
+const AppContext = createContext();  // variable que comparte datos a toda la app
+
+export const AppProvider = ({ children }) => { //children es todo lo que esta dentro del provider
+  
+  const [searchTerm, setSearchTerm] = useState(""); // estado para el texto de busqueda 
+
+  const [products, setProducts] = useState([]); // lista de productos que vienen de la api
+
+  const [favorites, setFavorites] = useState([]); // lista de productos favoritos
+
+  // funcion para agregar o quitar favoritos
+  const toggleFavorite = (product) => {
+    setFavorites((prev) => {
+      if (prev.some(p => p.id === product.id)) {
+        return prev.filter(p => p.id !== product.id) // si ya esta, lo saca
+      } else {
+        return [...prev, product] // si no esta, lo agrega
+      }
+    })
+  }
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("/api/products"); // cambiar link cuando tenga la api
+        const data = await res.json();
+        setProducts(data); // guarda los productos en el estado global
+      } catch (err) {
+        console.error("Error fetching products:", err); // muestra el error en consola
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
+  return (
+    <AppContext.Provider value={{ searchTerm, setSearchTerm, products, favorites, toggleFavorite }}>
+      {/*expone estos valores/funciones a todos los componentes hijos */}
+      {children}                                        
+      {/* renderiza lo que envuelva con el provider */}
+    </AppContext.Provider>
+  );
+};
+
+export const useAppContext = () => useContext(AppContext);
