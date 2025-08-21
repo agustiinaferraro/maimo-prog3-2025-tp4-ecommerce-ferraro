@@ -26,6 +26,8 @@ const HeroRotator = () => {
       <Image
         key={currentProduct.id} //recarga el video al cambiar de disco
         src={`https://image.tmdb.org/t/p/original/${currentProduct.poster_path}`}
+        width={500}
+        height={750}
         autoPlay
         loop
         muted
