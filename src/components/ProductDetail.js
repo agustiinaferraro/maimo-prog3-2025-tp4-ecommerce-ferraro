@@ -77,12 +77,12 @@ export default function ProductDetail({ id }) {
 
           {/* Corazón de favoritos */}
           <button
-            className={`text-3xl transition-colors w-max mt-4 ${
-              isFavorite ? 'text-red-500' : 'text-white'
+            className={`text-3xl w-max mt-4 transition-colors duration-200 active:scale-110 cursor-pointer ${
+              isFavorite ? 'text-red-500 hover:text-red-600' : 'text-white hover:text-gray-300'
             }`}
             onClick={handleFavorite}
           >
-            ♥
+            {isFavorite ? '♥' : '♡'}
           </button>
         </div>
       </div>

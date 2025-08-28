@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import Link from "next/link"
 import { useAppContext } from "@/app/context/AppContext"
@@ -15,12 +15,12 @@ const ProductCard = ({ product }) => {
         className="w-full h-64 object-cover"
       />
 
-      {/*boton fav */}
+      {/* Corazón en la esquina inferior derecha */}
       <button
-        className={`absolute top-2 right-2 text-xl ${isFavorite ? "text-red-500" : "text-gray-300"}`}
+        className={`absolute bottom-2 right-2 text-3xl ${isFavorite ? "text-red-500" : "text-gray-300"}`}
         onClick={() => toggleFavorite(product)}
       >
-        ♥
+        {isFavorite ? "♥" : "♡"}
       </button>
 
       <div className="p-4">
