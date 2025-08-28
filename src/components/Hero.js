@@ -1,49 +1,62 @@
 'use client'
 
-import { useState, useEffect } from "react"
-import { useAppContext } from "@/app/context/AppContext"
-import Link from "next/link"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; 
+import { useAppContext } from "@/app/context/AppContext";
 
-const HeroRotator = () => {
-  const { products } = useAppContext() // aca traigo los productos desde el context
-  const [currentIndex, setCurrentIndex] = useState(0) // guarda cual disco se muestra
+const Hero = () => {
+  const { products } = useAppContext();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const router = useRouter();
+  const IMAGE_BASE = "https://image.tmdb.org/t/p/original/";
 
-  // cambia de disco auto cada 10 segss
+  const handleClick = () => {
+    if (products && products.length > 0) {
+      router.push(`/product/${products[currentIndex].id}`);
+    }
+  };
+
   useEffect(() => {
+    if (!products || products.length === 0) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % products.length) // siguiente disco, vuelve al inicio si es el ultimo
-    }, 10000)
-    return () => clearInterval(interval) // limpia el intervalo al desmontar
-  }, [products])
+      setCurrentIndex((prev) => (prev + 1) % products.length);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [products]);
 
-  if (!products || products.length === 0) return null // si no hay productos, no renderiza
+  if (!products || products.length === 0)
+    return (
+      <div className="h-[500px] md:h-[700px] bg-gray-800 flex items-center justify-center text-white">
+        Cargando...
+      </div>
+    );
 
-  const currentProduct = products[currentIndex] // disco actual
+  const currentProduct = products[currentIndex];
+
+  if (!currentProduct?.backdrop_path && !currentProduct?.poster_path)
+    return (
+      <div className="h-[500px] md:h-[700px] bg-gray-800 flex items-center justify-center text-white">
+        Cargando imagen...
+      </div>
+    );
 
   return (
-    <div className="relative w-full h-[500px] md:h-[700px] overflow-hidden">
-      <video
-        key={currentProduct.id} //recarga el video al cambiar de disco
-        src={currentProduct.video} //video del disco
-        autoPlay
-        loop
-        muted
-        className="w-full h-full object-cover"
-      />
-
-      <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-start px-10 md:px-20">
-        <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
-          {currentProduct.name}
+    <section
+      style={{
+        backgroundImage: `url(${IMAGE_BASE}${currentProduct.backdrop_path || currentProduct.poster_path})`,
+      }}
+      className="w-full h-[500px] md:h-[700px] bg-cover bg-no-repeat bg-center cursor-pointer relative"
+      onClick={handleClick}
+    >
+      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute inset-0 flex flex-col justify-center items-start px-10 md:px-20 z-10 text-white">
+        <h1 className="text-3xl md:text-5xl font-bold mb-4">
+          {currentProduct.title || currentProduct.name}
         </h1>
-        <p className="text-white mb-6">{currentProduct.description}</p>
-        <Link href={`/product/${currentProduct.id}`}>
-          <button className="px-6 py-3 bg-white text-black font-semibold rounded hover:bg-gray-200 transition">
-            Ver disco
-          </button>
-        </Link>
+        <p className="max-w-[500px]">{currentProduct.overview}</p>
       </div>
-    </div>
-  )
-}
+    </section>
+  );
+};
 
-export default HeroRotator
+export default Hero;
