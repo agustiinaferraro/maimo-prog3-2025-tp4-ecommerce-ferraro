@@ -1,19 +1,24 @@
 'use client'
 
 import Image from "next/image"
+import { useAppContext } from "@/app/context/AppContext"
+import ProductGrid from "@/components/ProductGrid"
 
 const AboutPage = () => {
+  const { searchTerm } = useAppContext();
+
+  if (searchTerm) {
+    return <ProductGrid />
+  }
+
   return (
     <div 
       className="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/background-about.png')" }}
     >
-      {/* overlay negro */}
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
-      {/* contenido */}
       <div className="relative flex flex-col md:flex-row items-center gap-10 max-w-6xl mx-auto text-white px-5 md:px-10 py-5">
-        
         <div className="flex-1">
           <Image 
             src="/banner.png" 
@@ -33,10 +38,9 @@ const AboutPage = () => {
             La banda es reconocida por sus <span className="font-bold">videoclips innovadores</span> y la fuerte conexión con sus fans a través de redes sociales. Cada lanzamiento busca transmitir <span className="font-bold">energía y autenticidad</span> en su música.
           </p>
         </div>
-
       </div>
     </div>
   )
 }
 
-export default AboutPage
+export default AboutPage;
