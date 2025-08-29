@@ -1,6 +1,7 @@
 'use client'
 
 import Image from "next/image"
+import Link from "next/link"
 import { useAppContext } from "@/app/context/AppContext"
 import ProductGrid from "@/components/ProductGrid"
 
@@ -12,23 +13,42 @@ const AboutPage = () => {
   }
 
   return (
-    <div 
-      className="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('/background-about.png')" }}
-    >
-      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+    <div className="relative min-h-screen flex items-center justify-center px-5 md:px-10 py-5">
 
-      <div className="relative flex flex-col md:flex-row items-center gap-10 max-w-6xl mx-auto text-white px-5 md:px-10 py-5">
-        <div className="flex-1">
+      {/*fondo difuminado*/}
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/background-about.png"
+          alt="Background About"
+          fill
+          className="object-cover brightness-50 blur-sm"
+        />
+      </div>
+
+      {/*btn back */}
+      <div className="absolute top-5 left-10">
+        <Link href="/">
+          <span className="text-7xl text-white py-6 hover:text-green-500 active:text-green-600 cursor-pointer">
+            ‹
+          </span>
+        </Link>
+      </div>
+
+      {/*contenedor principal */}
+      <div className="relative flex flex-col md:flex-row items-center gap-10 w-full max-w-[900px] mx-auto text-white">
+
+        {/*banner */}
+        <div className="flex-1 w-full max-w-[350px]">
           <Image 
-            src="/banner.png" 
-            alt="The Driver Era" 
-            width={600} 
-            height={700} 
+            src="/banner.png"
+            alt="The Driver Era"
+            width={350}
+            height={350}
             className="w-full h-auto rounded-lg object-cover"
           />
         </div>
 
+        {/*info */}
         <div className="flex-1">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">The Driver Era</h1>
           <p className="text-lg md:text-xl leading-relaxed">
@@ -38,9 +58,10 @@ const AboutPage = () => {
             La banda es reconocida por sus <span className="font-bold">videoclips innovadores</span> y la fuerte conexión con sus fans a través de redes sociales. Cada lanzamiento busca transmitir <span className="font-bold">energía y autenticidad</span> en su música.
           </p>
         </div>
+
       </div>
     </div>
   )
 }
 
-export default AboutPage;
+export default AboutPage

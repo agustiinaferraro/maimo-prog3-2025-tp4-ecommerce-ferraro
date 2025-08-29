@@ -26,7 +26,7 @@ const Hero = () => {
 
   if (!products || products.length === 0)
     return (
-      <div className="h-[500px] md:h-[700px] bg-gray-800 flex items-center justify-center text-white">
+      <div className="h-[400px] md:h-[500px] bg-gray-800 flex items-center justify-center text-white">
         Cargando...
       </div>
     );
@@ -35,24 +35,23 @@ const Hero = () => {
 
   if (!currentProduct?.backdrop_path && !currentProduct?.poster_path)
     return (
-      <div className="h-[500px] md:h-[700px] bg-gray-800 flex items-center justify-center text-white">
+      <div className="h-[400px] md:h-[500px] bg-gray-800 flex items-center justify-center text-white">
         Cargando imagen...
       </div>
     );
 
   return (
     <section
-      style={{
-        backgroundImage: `url(${IMAGE_BASE}${currentProduct.backdrop_path || currentProduct.poster_path})`,
-      }}
-      className="w-full h-[500px] md:h-[700px] bg-cover bg-no-repeat bg-center cursor-pointer relative"
+      style={{ backgroundImage: `url(${IMAGE_BASE}${currentProduct.backdrop_path || currentProduct.poster_path})` }}
+      className="w-full h-[400px] md:h-[500px] bg-cover bg-center relative cursor-pointer"
       onClick={handleClick}
     >
-      <div className="absolute inset-0 bg-black/40"></div>
-      <div className="absolute inset-0 flex flex-col justify-center items-start px-10 md:px-20 z-10 text-white">
-        <h1 className="text-3xl md:text-5xl font-bold mb-4">
-          {currentProduct.title || currentProduct.name}
-        </h1>
+      {/* Gradiente difuminado */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/70"></div>
+
+      {/* Contenido */}
+      <div className="absolute inset-0 flex flex-col justify-center items-start px-5 md:px-20 z-10 text-white">
+        <h1 className="text-3xl md:text-5xl font-bold mb-4">{currentProduct.title || currentProduct.name}</h1>
         <p className="max-w-[500px]">{currentProduct.overview}</p>
       </div>
     </section>
