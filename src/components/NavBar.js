@@ -53,6 +53,10 @@ const Navbar = () => {
           <li className="hover:text-white transition-colors duration-200">
             <Link href="/about">About</Link>
           </li>
+          
+          <li className="hover:text-white transition-colors duration-200">
+            <Link href="/discos">Discos</Link>
+          </li>
         </ul>
       </nav>
     </div>
