@@ -6,33 +6,44 @@ import { useAppContext } from "@/app/context/AppContext"
 const ProductCard = ({ product }) => {
   const { favorites, toggleFavorite } = useAppContext()
   const isFavorite = favorites.some(fav => fav.id === product.id)
+  const imageUrl = product.poster_path
+    ? `https://image.tmdb.org/t/p/original${product.poster_path}`
+    : `https://image.tmdb.org/t/p/original${product.backdrop_path}`
 
   return (
-    <div className="bg-[#111] text-white rounded-lg overflow-hidden shadow hover:shadow-lg transition relative">
-      <img 
-        src={`https://image.tmdb.org/t/p/original/${product.poster_path}`}
-        alt={product.title} 
-        className="w-full h-64 object-cover"
-      />
+    <Link
+      href={`/product/${product.id}`}
+      className="relative flex-shrink-0 cursor-pointer overflow-hidden rounded-lg block transition-transform duration-300 hover:scale-105"
+    >
+      <div className="relative overflow-hidden rounded-lg">
+        {/* Imagen vertical */}
+        <img
+          src={imageUrl}
+          alt={product.title}
+          className="w-full h-[400px] object-cover rounded-lg"
+        />
 
-      {/* Corazón en la esquina inferior derecha */}
+        <div className="absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-black/50 to-transparent rounded-t-lg pointer-events-none" />
+
+        <div className="absolute bottom-0 left-0 w-full h-36 bg-gradient-to-t from-black/95 to-transparent rounded-b-lg p-3 flex items-end">
+          <h3 className="text-white text-base md:text-lg font-semibold line-clamp-2">
+            {/*product.title*/}
+          </h3>
+        </div>
+      </div>
+
       <button
-        className={`absolute bottom-2 right-2 text-3xl ${isFavorite ? "text-red-500" : "text-gray-300"}`}
-        onClick={() => toggleFavorite(product)}
+        onClick={(e) => {
+          e.preventDefault()
+          toggleFavorite(product)
+        }}
+        className={`absolute bottom-3 right-3 cursor-pointer text-3xl transition-transform duration-300 hover:scale-125 hover:text-white active:scale-110 ${
+          isFavorite ? "text-red-500" : "text-gray-300"
+        }`}
       >
         {isFavorite ? "♥" : "♡"}
       </button>
-
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
-        <p className="text-gray-300 mb-4">{product.description}</p>
-        <Link href={`/product/${product.id}`}>
-          <button className="px-4 py-2 bg-white text-black font-semibold rounded hover:bg-gray-200 transition">
-            Ver disco
-          </button>
-        </Link>
-      </div>
-    </div>
+    </Link>
   )
 }
 

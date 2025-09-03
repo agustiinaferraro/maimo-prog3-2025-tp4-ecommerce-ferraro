@@ -31,7 +31,8 @@ export default function ProductDetail({ id }) {
 
   const isFavorite = favorites.some(fav => fav.id === productDetail.id);
 
-  const handleFavorite = () => {
+  const handleFavorite = (e) => {
+    e.preventDefault();
     toggleFavorite({
       id: productDetail.id,
       title: productDetail.title,
@@ -45,46 +46,63 @@ export default function ProductDetail({ id }) {
   return (
     <div className="relative min-h-screen w-full px-5 py-10 flex justify-center">
       
-      {/* Botón Back */}
-      <div className="absolute top-5 left-5">
-        <Link
-          href="/"
-          className="text-white text-3xl font-bold hover:text-gray-300 transition"
-        >
-          &lt;
-        </Link>
-      </div>
+      {/* Fondo difuminado horizontal */}
+      {productDetail.backdrop_path && (
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src={`https://image.tmdb.org/t/p/original/${productDetail.backdrop_path}`}
+            alt={productDetail.title}
+            fill
+            className="object-cover brightness-50 blur-sm"
+          />
+        </div>
+      )}
 
-      {/* Contenedor central */}
-      <div className="w-full max-w-6xl grid md:grid-cols-2 gap-10 items-center">
+      {/*cont central del contenido */}
+      <div className="w-[60%] max-w-6xl grid md:grid-cols-2 gap-10 items-center">
         
-        {/* Imagen */}
-        <div className="flex justify-center w-full">
-          <div className="relative w-full max-w-[500px] h-[300px] md:h-[500px]">
+        {/*img vertical con gradientes */}
+        <div className="relative w-full flex justify-center">
+          <div className="relative w-full max-w-[400px] h-[500px] md:h-[650px] rounded-lg overflow-hidden transition-transform duration-300 hover:scale-105">
             <Image
               src={`https://image.tmdb.org/t/p/original/${productDetail.poster_path}`}
-              fill
               alt={productDetail.title}
+              fill
               className="object-cover rounded-lg"
             />
+
+            {/*gradiente superior*/}
+            <div className="absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-black/70 to-transparent rounded-t-lg pointer-events-none" />
+
+            {/*gradiente inferior */}
+            <div className="absolute bottom-0 left-0 w-full h-1/4 bg-gradient-to-t from-black/90 to-transparent rounded-b-lg pointer-events-none" />
           </div>
         </div>
 
-        {/* Información */}
+        {/*info */}
         <div className="flex flex-col justify-center gap-6 w-full">
-          <h1 className="text-2xl md:text-4xl font-bold">{productDetail.title}</h1>
+          <h1 className="text-3xl md:text-5xl font-bold">{productDetail.title}</h1>
           <p className="text-base md:text-lg leading-relaxed">{productDetail.overview}</p>
 
-          {/* Corazón de favoritos */}
+          {/*cora de favis */}
           <button
-            className={`text-3xl w-max mt-4 transition-colors duration-200 active:scale-110 cursor-pointer ${
+            onClick={handleFavorite}
+            className={`absolute md:relative bottom-3 right-51 text-3xl transition-transform duration-300 hover:scale-125 active:scale-110 cursor-pointer ${
               isFavorite ? 'text-red-500 hover:text-red-600' : 'text-white hover:text-gray-300'
             }`}
-            onClick={handleFavorite}
           >
             {isFavorite ? '♥' : '♡'}
           </button>
         </div>
+      </div>
+
+      {/* btn back */}
+      <div className="absolute top-5 left-5">
+        <Link href="/">
+          <span className="text-7xl text-white py-6 hover:text-green-500 active:text-green-600 cursor-pointer">
+            ‹
+          </span>
+        </Link>
       </div>
     </div>
   );

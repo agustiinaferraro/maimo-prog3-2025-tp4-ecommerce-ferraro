@@ -3,8 +3,16 @@
 import Hero from "./Hero"
 import ProductGrid from "./ProductGrid"
 import CarouselSingles from "./CarouselSingles"
+import { useAppContext } from "@/app/context/AppContext"
 
 const HomeContainer = () => {
+  const { searchTerm } = useAppContext()
+
+  //si hay busqueda muestra solo la grilla
+  if (searchTerm) {
+    return <ProductGrid />
+  }
+
   return (
     <div className="w-full flex flex-col">
       <Hero />
@@ -18,7 +26,6 @@ const HomeContainer = () => {
         <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 px-10">Todos los discos</h2>
         <ProductGrid />
       </section>
-
     </div>
   )
 }
