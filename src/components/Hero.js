@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; 
 import { useAppContext } from "@/app/context/AppContext";
+import Loading from "./Loading";
 
 const Hero = () => {
   const { products } = useAppContext();
@@ -34,7 +35,7 @@ const Hero = () => {
   if (!products || products.length === 0)
     return (
       <div className="h-[400px] md:h-[500px] bg-gray-800 flex items-center justify-center text-white">
-        Cargando...
+        <Loading />
       </div>
     );
 
@@ -42,9 +43,7 @@ const Hero = () => {
 
   if (!currentProduct?.backdrop_path && !currentProduct?.poster_path)
     return (
-      <div className="h-[400px] md:h-[500px] bg-gray-800 flex items-center justify-center text-white">
-        Cargando imagen...
-      </div>
+      <Loading />
     );
 
   return (

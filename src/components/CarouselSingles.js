@@ -2,13 +2,14 @@
 
 import { useAppContext } from "@/app/context/AppContext"
 import Link from "next/link"
+import Loading from "./Loading"
 
 const CarouselSingles = () => {
   const { products, favorites, toggleFavorite } = useAppContext()
   const singles = products.filter(p => p.backdrop_path || p.poster_path)
 
   if (singles.length === 0)
-    return <div className="h-[300px] flex items-center justify-center">Cargando...</div>
+    return <Loading />
 
   const loopSingles = [...singles, ...singles]
 
