@@ -7,6 +7,7 @@ import { useAppContext } from "@/app/context/AppContext";
 const Hero = () => {
   const { products } = useAppContext();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [fade, setFade] = useState(true);
   const router = useRouter();
   const IMAGE_BASE = "https://image.tmdb.org/t/p/original/";
 
@@ -19,8 +20,14 @@ const Hero = () => {
   useEffect(() => {
     if (!products || products.length === 0) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % products.length);
+      setFade(false);
+
+      setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % products.length);
+        setFade(true);
+      }, 500);
     }, 10000);
+
     return () => clearInterval(interval);
   }, [products]);
 
@@ -42,14 +49,22 @@ const Hero = () => {
 
   return (
     <section
-      style={{ backgroundImage: `url(${IMAGE_BASE}${currentProduct.backdrop_path || currentProduct.poster_path})` }}
-      className="w-full h-[400px] md:h-[500px] bg-cover bg-center relative cursor-pointer"
+      className="w-full h-[400px] md:h-[500px] bg-cover bg-center relative cursor-pointer overflow-hidden"
       onClick={handleClick}
     >
-      {/* Gradiente difuminado */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/0 to-black/70"></div>
+      <div
+        key={currentProduct.id}
+        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ${fade ? "opacity-100" : "opacity-0"}`}
+        style={{ 
+          backgroundImage: `url(${IMAGE_BASE}${currentProduct.backdrop_path || currentProduct.poster_path})`, 
+          filter: "brightness(70%)" // imagen oscura
+        }}
+      ></div>
 
-      {/* Contenido */}
+      {/*gradientes arriba y abajo */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/90"></div>
+
+      {/*contenido */}
       <div className="absolute inset-0 flex flex-col justify-center items-start px-5 md:px-20 z-10 text-white">
         <h1 className="text-3xl md:text-5xl font-bold mb-4">{currentProduct.title || currentProduct.name}</h1>
         <p className="max-w-[500px]">{currentProduct.overview}</p>
