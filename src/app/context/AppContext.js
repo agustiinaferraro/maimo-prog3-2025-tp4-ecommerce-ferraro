@@ -14,11 +14,12 @@ export const AppProvider = ({ children }) => { //children es todo lo que esta de
 
   // funcion para agregar o quitar favoritos
   const toggleFavorite = (product) => {
-    setFavorites((prev) => {
-      if (prev.some(p => p.id === product.id)) {
-        return prev.filter(p => p.id !== product.id) // si ya esta, lo saca
+    setFavorites((prev) => { //prev es el array de favs
+      if (prev.some(p => p.id === product.id)) { // al array le aplico el metodo some para verificar 
+                                                // si cada p (c/elemento) cumple con el id de lo que se esta tocando
+        return prev.filter(p => p.id !== product.id) // si ya esta, lo saca, filter crea un array con los datos actuales
       } else {
-        return [...prev, product] // si no esta, lo agrega
+        return [...prev, product] // si no esta, lo agrega con el spread operator
       }
     })
   }
@@ -27,7 +28,7 @@ export const AppProvider = ({ children }) => { //children es todo lo que esta de
     const fetchProducts = async () => {
       try {
         const res = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=eb7e3fd7272143562cec959061b5eb32`); // cambiar link cuando tenga la api
-        const data = await res.json();
+        const data = await res.json(); //res es el objeto que devuelve fetch, await espera a que se convierta en un objeto js con .json()
         setProducts(data.results); // guarda los productos en el estado global
       } catch (err) {
         console.error("Error fetching products:", err); // muestra el error en consola
@@ -35,7 +36,7 @@ export const AppProvider = ({ children }) => { //children es todo lo que esta de
     }
 
     fetchProducts();
-  }, []);
+  }, []); //el array vacio significa que se ejecuta el useeffect solo una vez
 
   return (
     <AppContext.Provider value={{ searchTerm, setSearchTerm, products, favorites, toggleFavorite }}>

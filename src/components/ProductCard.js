@@ -11,12 +11,12 @@ const ProductCard = ({ product }) => {
     : `https://image.tmdb.org/t/p/original${product.backdrop_path}`
 
   return (
-    <Link
+    <Link //link al deralle de la card
       href={`/product/${product.id}`}
       className="relative flex-shrink-0 cursor-pointer overflow-hidden rounded-lg block transition-transform duration-300 hover:scale-105"
     >
       <div className="relative overflow-hidden rounded-lg">
-        {/* Imagen vertical */}
+        {/*img vertical */}
         <img
           src={imageUrl}
           alt={product.title}
@@ -34,8 +34,8 @@ const ProductCard = ({ product }) => {
 
       <button
         onClick={(e) => {
-          e.preventDefault()
-          toggleFavorite(product)
+          e.preventDefault() //evita que navegue
+          toggleFavorite(product) //pone o saca de fav
         }}
         className={`absolute bottom-3 right-3 cursor-pointer text-3xl transition-transform duration-300 hover:scale-125 hover:text-white active:scale-110 ${
           isFavorite ? "text-red-500" : "text-gray-300"
