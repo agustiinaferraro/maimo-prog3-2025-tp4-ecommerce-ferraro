@@ -36,7 +36,8 @@ const Navbar = () => {
 
           {/* menu de navegacion */}
           <nav 
-            className={`w-full md:w-auto ${menuOpen ? 'block' : 'hidden'} md:flex md:items-center md:gap-6 md:ml-auto mt-2 md:mt-0`}
+            className={`w-full md:w-auto ${menuOpen ? 'block absolute top-[72px] left-0 z-10' : 'hidden'} md:flex md:items-center md:gap-6 md:ml-auto md:mt-0 
+                        bg-black rounded-b-xl p-4 md:p-0 shadow-lg`}
           >
             {/*input de buscar*/}
             <input
@@ -44,13 +45,13 @@ const Navbar = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="🔍 Buscar discos..."
-              className="w-full md:w-64 p-2 rounded-md border border-gray-300 bg-transparent text-white placeholder-gray-400 mb-2 md:mb-0"
+              className="w-full mr-15 md:w-64 p-2 rounded-md border border-gray-700 bg-gray-900 text-white placeholder-gray-400 mb-3 md:mb-0"
             />
 
-            <ul className="flex flex-col md:flex-row gap-6 text-gray-300 px-10">
+            <ul className="flex flex-col md:flex-row gap-2 md:gap-6 text-gray-300 px-2 md:px-0">
               {/*favs */}
-              <li className="hover:text-white transition-colors duration-200 flex items-center gap-2 min-w-[118px]">
-                <Link href="/favorites" className="flex items-center gap-2">
+              <li className="hover:text-white transition-colors duration-200 flex items-center gap-2 py-2 border-b border-gray-700 md:border-none min-w-[118px]">
+                <Link href="/favorites" className="flex items-center gap-2 w-full">
                   Favorites
                   <span 
                     className={`w-6 h-6 flex items-center justify-center rounded-full bg-green-500 text-black font-bold text-sm transition-opacity duration-500 ${favorites.length > 0 ? 'opacity-100' : 'opacity-0'}`}
@@ -61,15 +62,15 @@ const Navbar = () => {
               </li>
 
               {/*about */}
-              <li className="hover:text-white transition-colors duration-200 flex items-center min-w-[100px]">
-                <Link href="/about">
+              <li className="hover:text-white transition-colors duration-200 flex items-center py-2 border-b border-gray-700 md:border-none min-w-[100px]">
+                <Link href="/about" className="w-full">
                   About
                 </Link>
               </li>
 
               {/*discos*/}
-              <li className="hover:text-white transition-colors duration-200 flex items-center min-w-[100px]">
-                <Link href="/discos">
+              <li className="hover:text-white transition-colors duration-200 flex items-center py-2 md:py-0 min-w-[100px]">
+                <Link href="/discos" className="w-full">
                   Discos
                 </Link>
               </li>
