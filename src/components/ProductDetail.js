@@ -5,48 +5,49 @@ import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAppContext } from '@/app/context/AppContext';
+import Loading from './Loading';
 
 export default function ProductDetail({ id }) {
-  const { favorites, toggleFavorite } = useAppContext();
-  const [productDetail, setProductDetail] = useState({});
-  const [loading, setLoading] = useState(true);
+  const { favorites, toggleFavorite } = useAppContext(); //agarra el fav y funcion para sacar/agregar del context
+  const [productDetail, setProductDetail] = useState({}); //guarda lso datos de los productos que se muestran
+  const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
 
   const API_URL = `https://api.themoviedb.org/3/movie/${id}?api_key=eb7e3fd7272143562cec959061b5eb32`;
 
   useEffect(() => {
     const fetchProductDetail = async () => {
-      setLoading(true);
+      setLoading(true); //empieza la carga
       try {
         const response = await axios.get(API_URL);
-        setProductDetail(response.data);
-        setLoading(false);
+        setProductDetail(response.data); //guardalos datos de la api en el estado
+        setLoading(false);//termina la carga
       } catch (error) {
         console.log('Hubo un error', error);
         setError('Error al cargar el disco');
       }
     };
     fetchProductDetail();
-  }, [id]);
+  }, [id]); //si se vuelve a aejecutar cambia el id del producot
 
-  const isFavorite = favorites.some(fav => fav.id === productDetail.id);
+  const isFavorite = favorites.some(fav => fav.id === productDetail.id); //verifica si el producto ya esta en fav
 
   const handleFavorite = (e) => {
-    e.preventDefault();
-    toggleFavorite({
+    e.preventDefault(); //evita que navegue
+    toggleFavorite({ //agrea o quita fav
       id: productDetail.id,
       title: productDetail.title,
       poster_path: productDetail.poster_path
     });
   };
 
-  if (loading) return <p className="text-white text-center text-2xl mt-20">Loading...</p>;
+  if (loading) return <Loading />
   if (error) return <p className="text-red-500 text-center text-2xl mt-20">{error}</p>;
 
   return (
     <div className="relative min-h-screen w-full px-5 py-10 flex justify-center">
       
-      {/* Fondo difuminado horizontal */}
+      {/*fondo difuminado horizontal */}
       {productDetail.backdrop_path && (
         <div className="absolute inset-0 -z-10">
           <Image
