@@ -36,8 +36,8 @@ const Navbar = () => {
 
           {/* menu de navegacion */}
           <nav 
-            className={`w-full md:w-auto ${menuOpen ? 'block' : 'hidden'} md:flex md:items-center md:gap-6 md:ml-auto mt-2 md:mt-0 
-                        bg-black rounded-xl p-4 md:p-0 shadow-lg`}
+            className={`w-full md:w-auto ${menuOpen ? 'block absolute top-[72px] left-0 z-10' : 'hidden'} md:flex md:items-center md:gap-6 md:ml-auto md:mt-0 
+                        bg-black rounded-b-xl p-4 md:p-0 shadow-lg`}
           >
             {/*input de buscar*/}
             <input
