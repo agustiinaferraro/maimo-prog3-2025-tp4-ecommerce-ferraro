@@ -10,9 +10,7 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    turbo: false, // desactiva Turbopack
-  },
+  // experimental: { turbo: false }  <- eliminado para evitar warning
 };
 
 export default nextConfig;
