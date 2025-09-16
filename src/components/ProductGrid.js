@@ -12,21 +12,26 @@ const ProductGrid = ({ horizontal = false }) => { // si horizontal es true, se m
   )
   
   return (
-    <div>
-      <h2 className=" px-10 text-3xl font-bold mb-10 relative z-10 text-left">
-        Merch
-      </h2>
-      <section
-        className={`px-10 py-12 gap-8 ${
-          horizontal
-            ? "flex overflow-x-auto space-x-6 scrollbar-hide" // estilo horizontal
-            : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" // estilo grilla
-        }`}
-      >
-        {filteredProducts.map(product => ( //recorre los productos filtrados y crea una card por c/u
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </section>
+    <div className="relative pb-6 px-10">
+      {/* Fondo vidrio redondeado con sombra */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-md rounded-2xl shadow-2xl pointer-events-none" />
+
+      <div className="relative z-10 pt-10">
+        <h2 className="px-10 text-3xl font-bold mb-10 relative z-10 text-left">
+          Merch
+        </h2>
+        <section
+          className={`px-10 py-12 gap-8 ${
+            horizontal
+              ? "flex overflow-x-auto space-x-6 scrollbar-hide" // estilo horizontal
+              : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" // estilo grilla
+          }`}
+        >
+          {filteredProducts.map(product => ( //recorre los productos filtrados y crea una card por c/u
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </section>
+      </div>
     </div>
   )
 }
