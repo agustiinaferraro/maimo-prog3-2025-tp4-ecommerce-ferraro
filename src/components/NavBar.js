@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import Image from "next/image"
 import Link from "next/link"
@@ -68,12 +68,20 @@ const Navbar = () => {
                 </Link>
               </li>
 
-              {/*discos*/}
+              {/*tour*/}
               <li className="hover:text-white transition-colors duration-200 flex items-center py-2 md:py-0 min-w-[100px]">
-                <Link href="/discos" className="w-full">
-                  Discos
+                <Link href="/tour" className="w-full">
+                  Tour
                 </Link>
               </li>
+
+              {/*merch*/}
+              <li className="hover:text-white transition-colors duration-200 flex items-center py-2 md:py-0 min-w-[100px]">
+                <Link href="/merch" className="w-full">
+                  Merch
+                </Link>
+              </li>
+
             </ul>
           </nav>
         </div>

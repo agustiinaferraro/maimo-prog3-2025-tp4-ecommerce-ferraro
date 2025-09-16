@@ -2,30 +2,52 @@
 
 import Hero from "./Hero"
 import ProductGrid from "./ProductGrid"
-import CarouselSingles from "./CarouselSingles"
+import About from "./About"
+import CarouselDiscos from "./CarouselDiscos"
+import Tour from "./Tour"
+import Cardsuno from "./Cardsuno"
+import Cardsdos from "./Cardsdos"
 import { useAppContext } from "@/app/context/AppContext"
 
 const HomeContainer = () => {
   const { searchTerm } = useAppContext()
 
-  //si hay busqueda muestra solo la grilla
+  // Si hay búsqueda, muestra solo la grilla
   if (searchTerm) {
-    return <ProductGrid />
+    return <ProductGrid horizontal />
   }
 
   return (
     <div className="w-full flex flex-col">
-      <Hero />
+
+      <section>
+        <Hero />
+      </section>     
+
+      <section>
+        <Cardsuno />  
+      </section> 
 
       <section className="px-5 md:px-20 my-10">
-        <h1 className="text-2xl md:text-4xl font-bold text-white mb-6 px-10">Singles destacados</h1>
-        <CarouselSingles />
+        <CarouselDiscos />
+      </section>
+
+      <section>
+        <About />
+      </section>
+
+      <section className="px-5 md:px-20 my-10 overflow-x-auto">
+        <Tour horizontal />
+      </section>
+
+      <section>
+        <Cardsdos />
       </section>
 
       <section className="px-5 md:px-20 my-10">
-        <h2 className="text-2xl md:text-4xl font-bold text-white mb-6 px-10">Todos los discos</h2>
-        <ProductGrid />
+        <ProductGrid horizontal/>
       </section>
+
     </div>
   )
 }
