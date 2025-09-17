@@ -4,8 +4,9 @@ import Link from "next/link"
 import { useAppContext } from "@/app/context/AppContext"
 
 const ProductCard = ({ product }) => {
-  const { favorites, toggleFavorite } = useAppContext()
+  const { favorites, toggleFavorite, cart, toggleCart } = useAppContext()
   const isFavorite = favorites.some(fav => fav.id === product.id)
+  const isInCart = cart.some(item => item.id === product.id)
   const imageUrl = product.poster_path
     ? `https://image.tmdb.org/t/p/original${product.poster_path}`
     : `https://image.tmdb.org/t/p/original${product.backdrop_path}`
@@ -31,6 +32,22 @@ const ProductCard = ({ product }) => {
           </h3>
         </div>
       </div>
+
+<button
+  onClick={(e) => {
+    e.preventDefault() //evita que navegue
+    toggleCart(product) // agrega o saca del carrito
+  }}
+  className={`absolute bottom-3 left-3 cursor-pointer text-3xl transition-transform duration-300 hover:scale-125 active:scale-110 ${
+    isInCart ? "text-green-500" : "text-gray-300"
+  }`}
+>
+  {/* carrito */}
+  <svg xmlns="http://www.w3.org/2000/svg" fill={isInCart ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 7H19m-12 0a1 1 0 100 2 1 1 0 000-2zm10 0a1 1 0 100 2 1 1 0 000-2z" />
+  </svg>
+</button>
+
 
       <button
         onClick={(e) => {
