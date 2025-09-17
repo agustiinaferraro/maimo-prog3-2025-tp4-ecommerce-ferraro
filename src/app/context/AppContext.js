@@ -1,4 +1,4 @@
-"use client";                          
+'use client';
 
 import { createContext, useContext, useState, useEffect } from "react"; 
 
@@ -12,6 +12,8 @@ export const AppProvider = ({ children }) => { //children es todo lo que esta de
 
   const [favorites, setFavorites] = useState([]); // lista de productos favoritos
 
+  const [cart, setCart] = useState([]); // lista de productos en el carrito
+
   // funcion para agregar o quitar favoritos
   const toggleFavorite = (product) => {
     setFavorites((prev) => { //prev es el array de favs
@@ -20,6 +22,17 @@ export const AppProvider = ({ children }) => { //children es todo lo que esta de
         return prev.filter(p => p.id !== product.id) // si ya esta, lo saca, filter crea un array con los datos actuales
       } else {
         return [...prev, product] // si no esta, lo agrega con el spread operator
+      }
+    })
+  }
+
+  // funcion para agregar o quitar del carrito
+  const toggleCart = (product) => {
+    setCart((prev) => { //prev es el array del carrito
+      if (prev.some(p => p.id === product.id)) { // verifica si el producto ya esta en el carrito
+        return prev.filter(p => p.id !== product.id) // si esta, lo saca
+      } else {
+        return [...prev, product] // si no esta, lo agrega
       }
     })
   }
@@ -39,7 +52,7 @@ export const AppProvider = ({ children }) => { //children es todo lo que esta de
   }, []); //el array vacio significa que se ejecuta el useeffect solo una vez
 
   return (
-    <AppContext.Provider value={{ searchTerm, setSearchTerm, products, favorites, toggleFavorite }}>
+    <AppContext.Provider value={{ searchTerm, setSearchTerm, products, favorites, toggleFavorite, cart, toggleCart }}>
       {/*expone estos valores/funciones a todos los componentes hijos */}
       {children}                                        
       {/* renderiza lo que envuelva con el provider */}

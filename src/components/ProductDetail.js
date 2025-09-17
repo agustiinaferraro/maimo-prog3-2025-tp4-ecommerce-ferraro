@@ -8,7 +8,7 @@ import { useAppContext } from '@/app/context/AppContext';
 import Loading from './Loading';
 
 export default function ProductDetail({ id }) {
-  const { favorites, toggleFavorite } = useAppContext(); //agarra el fav y funcion para sacar/agregar del context
+  const { favorites, toggleFavorite, cart, toggleCart } = useAppContext(); //agarra el fav y funcion para sacar/agregar del context + carrito
   const [productDetail, setProductDetail] = useState({}); //guarda lso datos de los productos que se muestran
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
@@ -31,10 +31,20 @@ export default function ProductDetail({ id }) {
   }, [id]); //si se vuelve a aejecutar cambia el id del producot
 
   const isFavorite = favorites.some(fav => fav.id === productDetail.id); //verifica si el producto ya esta en fav
+  const isInCart = cart.some(item => item.id === productDetail.id); //verifica si el producto ya esta en carrito
 
   const handleFavorite = (e) => {
     e.preventDefault(); //evita que navegue
     toggleFavorite({ //agrea o quita fav
+      id: productDetail.id,
+      title: productDetail.title,
+      poster_path: productDetail.poster_path
+    });
+  };
+
+  const handleCart = (e) => {
+    e.preventDefault(); //evita que navegue
+    toggleCart({ //agrega o quita del carrito
       id: productDetail.id,
       title: productDetail.title,
       poster_path: productDetail.poster_path
@@ -81,26 +91,43 @@ export default function ProductDetail({ id }) {
         </div>
 
         {/*info */}
-        <div className="flex flex-col justify-center gap-6 w-full">
+        <div className="flex flex-col justify-center gap-6 w-full relative">
           <h1 className="text-3xl md:text-5xl font-bold">{productDetail.title}</h1>
           <p className="text-base md:text-lg leading-relaxed">{productDetail.overview}</p>
 
-          {/*cora de favis */}
-          <button
-            onClick={handleFavorite}
-            className={`absolute md:relative bottom-3 right-51 text-3xl transition-transform duration-300 hover:scale-125 active:scale-110 cursor-pointer ${
-              isFavorite ? 'text-red-500 hover:text-red-600' : 'text-white hover:text-gray-300'
-            }`}
-          >
-            {isFavorite ? '♥' : '♡'}
-          </button>
+          {/* contenedor de botones */}
+          <div className="flex items-center gap-4 absolute md:relative bottom-3 right-1">
+            
+            {/* carrito */}
+            <button
+              onClick={handleCart}
+              className={`text-3xl transition-transform duration-200 hover:scale-110 cursor-pointer ${
+                isInCart ? 'text-green-500' : 'text-white hover:text-gray-300'
+              }`}
+            >
+              {/* carrito */}
+              <svg xmlns="http://www.w3.org/2000/svg" fill={isInCart ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 7H19m-12 0a1 1 0 100 2 1 1 0 000-2zm10 0a1 1 0 100 2 1 1 0 000-2z" />
+              </svg>
+            </button>
+
+            {/*cora de favis */}
+            <button
+              onClick={handleFavorite}
+              className={`text-3xl transition-transform duration-200 hover:scale-110 cursor-pointer ${
+                isFavorite ? 'text-red-500 hover:text-red-600' : 'text-white hover:text-gray-300'
+              }`}
+            >
+              {isFavorite ? '♥' : '♡'}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* btn back */}
       <div className="absolute top-5 left-5">
         <Link href="/">
-          <span className="text-7xl text-white py-6 hover:text-green-500 active:text-green-600 cursor-pointer">
+          <span className="text-7xl text-white p-6 hover:text-green-500 active:text-green-600 cursor-pointer">
             ‹
           </span>
         </Link>
