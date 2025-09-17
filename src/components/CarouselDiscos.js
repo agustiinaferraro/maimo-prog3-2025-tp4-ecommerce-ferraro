@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
 import { useAppContext } from "@/app/context/AppContext"
 import Link from "next/link"
 import Loading from "./Loading"
 
 const CarouselDiscos = () => {
-  const { products, favorites, toggleFavorite } = useAppContext() //agarra estos datos del context
+  const { products, favorites, toggleFavorite, cart, toggleCart } = useAppContext() //agarra estos datos del context
   const discos = products.filter(p => p.backdrop_path || p.poster_path) //filtra los productos con img disponibles
 
   if (discos.length === 0) // si no hay discos devuelve loading
@@ -21,6 +21,7 @@ const CarouselDiscos = () => {
       <div className="flex gap-6 whitespace-nowrap animate-carousel">
         {loopDiscos.map((disco, index) => {
           const isFav = favorites.some(fav => fav.id === disco.id) //verifica si el producto esta en favoritos (si cumple con la condicion, eso lo hago con some)
+          const isInCart = cart.some(item => item.id === disco.id) //verifica si el producto esta en carrito
           const imageUrl = disco.backdrop_path //elige la imagen disponible
             ? `https://image.tmdb.org/t/p/original${disco.backdrop_path}`
             : `https://image.tmdb.org/t/p/original${disco.poster_path}`
@@ -48,18 +49,37 @@ const CarouselDiscos = () => {
                   </div>
                 </div>
 
-                {/*cora */}
-                <button
-                  onClick={(e) => { 
-                    e.preventDefault()//evita que el click navegue al detalle
-                    toggleFavorite(disco)// agrega o quita de favoritos
-                  }}
-                  className={`absolute bottom-2 right-2 text-3xl transition-all duration-300 hover:scale-125 ${
-                    isFav ? "text-red-500" : "text-gray-300"
-                  }`}
-                >
-                  {isFav ? "♥" : "♡"}
-                </button>
+                {/* contenedor de botones */}
+                <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                  {/* carrito */}
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault() //evita que el click navegue al detalle
+                      toggleCart(disco) // agrega o quita del carrito
+                    }}
+                    className={`text-2xl transition-transform duration-200 hover:scale-110 cursor-pointer ${
+                      isInCart ? "text-green-500" : "text-white hover:text-gray-300"
+                    }`}
+                  >
+                    {/* carrito */}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill={isInCart ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 7H19m-12 0a1 1 0 100 2 1 1 0 000-2zm10 0a1 1 0 100 2 1 1 0 000-2z" />
+                    </svg>
+                  </button>
+
+                  {/*cora */}
+                  <button
+                    onClick={(e) => { 
+                      e.preventDefault()//evita que el click navegue al detalle
+                      toggleFavorite(disco)// agrega o quita de favoritos
+                    }}
+                    className={`text-3xl transition-transform duration-300 hover:scale-125 ${
+                      isFav ? "text-red-500" : "text-gray-300"
+                    }`}
+                  >
+                    {isFav ? "♥" : "♡"}
+                  </button>
+                </div>
               </div>
             </Link>
           )
