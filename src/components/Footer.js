@@ -1,3 +1,4 @@
+import Image from "next/image";
 const Footer = () => {
   const redes = [
     { nombre: "Instagram", url: "https://www.instagram.com/thedriverera", img: "/instagram.png" },
@@ -20,7 +21,9 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="flex flex-col items-center w-24 transform transition-transform duration-200 hover:scale-110 active:scale-95"
             >
-              <img
+              <Image
+                width={200}
+                height={200}
                 src={red.img}
                 alt={red.nombre}
                 className="w-12 h-12 mb-2 object-contain"

@@ -4,15 +4,18 @@ import Link from "next/link"
 import { useAppContext } from "@/app/context/AppContext"
 
 const ProductCard = ({ product }) => {
-  const { favorites, toggleFavorite, cart, toggleCart } = useAppContext()
+  const { favorites, toggleFavorite, cart, incrementCartItem, decrementCartItem, toggleCart } = useAppContext()
   const isFavorite = favorites.some(fav => fav.id === product.id)
-  const isInCart = cart.some(item => item.id === product.id)
+  const cartItem = cart.find(item => item.id === product.id) //verifica si el producto está en el carrito
   const imageUrl = product.poster_path
     ? `https://image.tmdb.org/t/p/original${product.poster_path}`
     : `https://image.tmdb.org/t/p/original${product.backdrop_path}`
 
+  // precio ficticio si no existe
+  const price = product.price || `$${(product.id % 20) + 10}.00`
+
   return (
-    <Link //link al deralle de la card
+    <Link //link al detalle de la card
       href={`/product/${product.id}`}
       className="relative flex-shrink-0 cursor-pointer overflow-hidden rounded-lg block transition-transform duration-300 hover:scale-105"
     >
@@ -26,29 +29,39 @@ const ProductCard = ({ product }) => {
 
         <div className="absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-black/50 to-transparent rounded-t-lg pointer-events-none" />
 
-        <div className="absolute bottom-0 left-0 w-full h-36 bg-gradient-to-t from-black/95 to-transparent rounded-b-lg p-3 flex items-end">
-          <h3 className="text-white text-base md:text-lg font-semibold line-clamp-2">
-            {/*product.title*/}
-          </h3>
+        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-black/95 to-transparent rounded-b-lg p-3 flex flex-col justify-end">
+          <div className="mb-8"> {/* subo titulo+precio para que no se pisen con los iconos */}
+            <h3 className="text-white text-base md:text-lg font-semibold line-clamp-2">
+              {product.title}
+            </h3>
+            <p className="text-gray-300 text-sm md:text-base font-light">{price}</p>
+          </div>
         </div>
       </div>
 
-<button
-  onClick={(e) => {
-    e.preventDefault() //evita que navegue
-    toggleCart(product) // agrega o saca del carrito
-  }}
-  className={`absolute bottom-3 left-3 cursor-pointer text-3xl transition-transform duration-300 hover:scale-125 active:scale-110 ${
-    isInCart ? "text-green-500" : "text-gray-300"
-  }`}
->
-  {/* carrito */}
-  <svg xmlns="http://www.w3.org/2000/svg" fill={isInCart ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 7H19m-12 0a1 1 0 100 2 1 1 0 000-2zm10 0a1 1 0 100 2 1 1 0 000-2z" />
-  </svg>
-</button>
+      {/* botón de carrito / control de cantidad */}
+      {!cartItem ? (
+        // si no está en carrito, mostrar solo "+"
+        <button
+          onClick={(e) => { e.preventDefault(); toggleCart(product) }}
+          className="absolute bottom-3 left-3 text-white text-3xl cursor-pointer bg-black/60 rounded-full w-10 h-10 flex items-center justify-center transition-transform duration-300 hover:scale-125"
+        >+</button>
+      ) : (
+        // si está en carrito, mostrar "- cantidad +"
+        <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-black/60 rounded px-2 py-1">
+          <button
+            onClick={(e) => { e.preventDefault(); decrementCartItem(product.id) }}
+            className="text-white font-bold px-2"
+          >-</button>
+          <span className="text-white font-semibold">{cartItem.quantity}</span>
+          <button
+            onClick={(e) => { e.preventDefault(); incrementCartItem(product.id) }}
+            className="text-white font-bold px-2"
+          >+</button>
+        </div>
+      )}
 
-
+      {/* favorito */}
       <button
         onClick={(e) => {
           e.preventDefault() //evita que navegue

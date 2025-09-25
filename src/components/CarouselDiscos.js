@@ -5,7 +5,7 @@ import Link from "next/link"
 import Loading from "./Loading"
 
 const CarouselDiscos = () => {
-  const { products, favorites, toggleFavorite, cart, toggleCart } = useAppContext() //agarra estos datos del context
+  const { products, favorites, toggleFavorite, cart, incrementCartItem, decrementCartItem, toggleCart } = useAppContext() //agarra estos datos del context
   const discos = products.filter(p => p.backdrop_path || p.poster_path) //filtra los productos con img disponibles
 
   if (discos.length === 0) // si no hay discos devuelve loading
@@ -15,16 +15,19 @@ const CarouselDiscos = () => {
 
   return (
     <div className="relative w-full overflow-hidden py-5">
-        <h2 className=" px-10 text-3xl font-bold mb-10 relative z-10 text-left">
-          Discos
-        </h2>
+      <h2 className="px-10 text-3xl font-bold mb-10 relative z-10 text-left">
+        Discos
+      </h2>
       <div className="flex gap-6 whitespace-nowrap animate-carousel">
         {loopDiscos.map((disco, index) => {
-          const isFav = favorites.some(fav => fav.id === disco.id) //verifica si el producto esta en favoritos (si cumple con la condicion, eso lo hago con some)
-          const isInCart = cart.some(item => item.id === disco.id) //verifica si el producto esta en carrito
+          const isFav = favorites.some(fav => fav.id === disco.id) //verifica si el producto esta en favoritos
+          const cartItem = cart.find(item => item.id === disco.id) //verifica si el producto está en carrito
           const imageUrl = disco.backdrop_path //elige la imagen disponible
             ? `https://image.tmdb.org/t/p/original${disco.backdrop_path}`
             : `https://image.tmdb.org/t/p/original${disco.poster_path}`
+
+          // precio ficticio si no existe
+          const price = disco.price || `$${(disco.id % 20) + 10}.00`
 
           return (
             <Link
@@ -42,36 +45,41 @@ const CarouselDiscos = () => {
                 {/*gradiente superior e inferior */}
                 <div className="absolute inset-0 rounded-lg pointer-events-none">
                   <div className="absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-black/80 to-transparent rounded-t-lg" />
-                  <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-black/95 to-transparent rounded-b-lg p-3 flex items-end">
+                  <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-black/95 to-transparent rounded-b-lg p-3 flex flex-col justify-end">
                     <h3 className="text-white text-lg md:text-xl font-semibold line-clamp-2">
                       {disco.title || disco.name} {/*nombre del disco*/}
                     </h3>
+                    <p className="text-gray-300 text-sm md:text-base font-light">{price}</p>
                   </div>
                 </div>
 
                 {/* contenedor de botones */}
                 <div className="absolute bottom-2 right-2 flex items-center gap-2">
                   {/* carrito */}
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault() //evita que el click navegue al detalle
-                      toggleCart(disco) // agrega o quita del carrito
-                    }}
-                    className={`text-2xl transition-transform duration-200 hover:scale-110 cursor-pointer ${
-                      isInCart ? "text-green-500" : "text-white hover:text-gray-300"
-                    }`}
-                  >
-                    {/* carrito */}
-                    <svg xmlns="http://www.w3.org/2000/svg" fill={isInCart ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 7H19m-12 0a1 1 0 100 2 1 1 0 000-2zm10 0a1 1 0 100 2 1 1 0 000-2z" />
-                    </svg>
-                  </button>
+                  {!cartItem ? (
+                    <button
+                      onClick={(e) => { e.preventDefault(); toggleCart(disco) }} //agrega al carrito
+                      className="text-white text-2xl cursor-pointer bg-black/60 rounded-full w-8 h-8 flex items-center justify-center transition-transform duration-300 hover:scale-125"
+                    >+</button>
+                  ) : (
+                    <div className="flex items-center gap-1 bg-black/60 rounded px-2 py-1">
+                      <button
+                        onClick={(e) => { e.preventDefault(); decrementCartItem(disco.id) }}
+                        className="text-white font-bold px-1"
+                      >-</button>
+                      <span className="text-white font-semibold">{cartItem.quantity}</span>
+                      <button
+                        onClick={(e) => { e.preventDefault(); incrementCartItem(disco.id) }}
+                        className="text-white font-bold px-1"
+                      >+</button>
+                    </div>
+                  )}
 
-                  {/*cora */}
+                  {/*corazón favorito */}
                   <button
                     onClick={(e) => { 
-                      e.preventDefault()//evita que el click navegue al detalle
-                      toggleFavorite(disco)// agrega o quita de favoritos
+                      e.preventDefault() //evita que el click navegue al detalle
+                      toggleFavorite(disco) // agrega o quita de favoritos
                     }}
                     className={`text-3xl transition-transform duration-300 hover:scale-125 ${
                       isFav ? "text-red-500" : "text-gray-300"
@@ -86,7 +94,7 @@ const CarouselDiscos = () => {
         })}
       </div>
 
-      {/*animcion del carousel */}
+      {/*animacion del carousel */}
       <style jsx>{`
         @keyframes carousel {
           0% { transform: translateX(0); }
