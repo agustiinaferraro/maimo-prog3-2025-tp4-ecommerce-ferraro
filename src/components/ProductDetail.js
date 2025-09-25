@@ -62,7 +62,7 @@ export default function ProductDetail({ id }) {
         <div className="absolute inset-0 -z-10">
           <Image
             src={`https://image.tmdb.org/t/p/original/${productDetail.backdrop_path}`}
-            alt={productDetail.title}
+            alt={`Fondo de ${productDetail.title}`} // alt más descriptivo
             fill
             className="object-cover brightness-50 blur-sm"
           />
@@ -77,7 +77,7 @@ export default function ProductDetail({ id }) {
           <div className="relative w-full max-w-[400px] h-[500px] md:h-[650px] rounded-lg overflow-hidden transition-transform duration-300 hover:scale-105">
             <Image
               src={`https://image.tmdb.org/t/p/original/${productDetail.poster_path}`}
-              alt={productDetail.title}
+              alt={`Poster de ${productDetail.title}`} // alt más descriptivo
               fill
               className="object-cover rounded-lg"
             />
@@ -93,7 +93,9 @@ export default function ProductDetail({ id }) {
         {/*info */}
         <div className="flex flex-col justify-center gap-6 w-full relative">
           <h1 className="text-3xl md:text-5xl font-bold">{productDetail.title}</h1>
-          <p className="text-base md:text-lg leading-relaxed">{productDetail.overview}</p>
+          <p className="text-base md:text-lg leading-relaxed">
+            {productDetail.overview || "Descripción no disponible"} 
+          </p>
 
           {/* contenedor de botones */}
           <div className="flex items-center gap-4 absolute md:relative bottom-3 right-1">
@@ -114,11 +116,14 @@ export default function ProductDetail({ id }) {
             {/*cora de favis */}
             <button
               onClick={handleFavorite}
-              className={`text-3xl transition-transform duration-200 hover:scale-110 cursor-pointer ${
+              className={`transition-transform duration-200 hover:scale-110 cursor-pointer ${
                 isFavorite ? 'text-red-500 hover:text-red-600' : 'text-white hover:text-gray-300'
               }`}
             >
-              {isFavorite ? '♥' : '♡'}
+              {/* corazón como SVG para consistencia */}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={isFavorite ? "currentColor" : "none"} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21C12 21 5 13.5 5 8.5C5 5.5 7.5 3 10.5 3C12 3 13.5 4 14 5.5C14.5 4 16 3 17.5 3C20.5 3 23 5.5 23 8.5C23 13.5 16 21 16 21H12Z" />
+              </svg>
             </button>
           </div>
         </div>

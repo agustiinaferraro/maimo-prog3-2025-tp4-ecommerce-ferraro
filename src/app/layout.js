@@ -1,8 +1,10 @@
+// src/app/layout.js
 import { Geist } from 'next/font/google';
 import './globals.css';
 import Footer from '@/components/Footer';
 import NavBar from '@/components/NavBar';
 import { AppProvider } from './context/AppContext';
+import FloatingCartButton from '@/components/FloatingCartButton';
 
 const geistSans = Geist({
   subsets: ['latin'],
@@ -20,6 +22,8 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} antialiased flex flex-col min-h-screen`}>
         <AppProvider>
           <NavBar />
+          {/* FloatingCartButton es Client Component, no importa */}
+          <FloatingCartButton />
           <main className="flex-grow">{children}</main>
           <Footer />
         </AppProvider>
