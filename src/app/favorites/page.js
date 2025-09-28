@@ -16,7 +16,7 @@ export default function FavoritesPage() {
   return (
     <div className="px-5 md:px-20 py-10 relative">
       {/* boton de volver*/}
-      <div className="fixed top-[90px] left-5 z-50"> {/* ajusta top según convenga */}
+      <div className="fixed top-[90px] left-5 z-50">
         <Link href="/">
           <span className="text-7xl text-white hover:text-green-500 active:text-green-600 cursor-pointer">
             ‹

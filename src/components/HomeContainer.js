@@ -12,7 +12,7 @@ import { useAppContext } from "@/app/context/AppContext"
 const HomeContainer = () => {
   const { searchTerm } = useAppContext()
 
-  // Si hay búsqueda, muestra solo la grilla
+  //si hay busqueda muestra solo la grilla
   if (searchTerm) {
     return <ProductGrid horizontal />
   }

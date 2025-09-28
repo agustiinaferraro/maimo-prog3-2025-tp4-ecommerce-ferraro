@@ -1,8 +1,22 @@
-import ProductDetail from "@/components/ProductDetail";
+'use client';
 
-export default function Page({ params }) { // params trae lo que esta en la URL 
-                                          // (por ej /disco/123) para poder usarlo dentro del componente
+import { useEffect, useState } from 'react';
+import { useAppContext } from '@/app/context/AppContext';
+import ProductDetail from '@/components/ProductDetail';
+import Loading from '@/components/Loading';
+import { useParams } from 'next/navigation';
 
-  const id = params.id; //desestructura id de params (ej de id/123 extrae 123)
-  return <ProductDetail id={id} />; //se le pasa el id
+export default function Page() {
+  const { products } = useAppContext();
+  const params = useParams();           // obtiene params 
+  const [id, setId] = useState(null);
+
+  useEffect(() => {
+    if (params?.id) setId(params.id);  //accede a id
+  }, [params]);
+
+  // espera que los productos se carguen antes de mostrar detalle
+  if (!id || !products || products.length === 0) return <Loading />;
+
+  return <ProductDetail id={id} />;
 }
