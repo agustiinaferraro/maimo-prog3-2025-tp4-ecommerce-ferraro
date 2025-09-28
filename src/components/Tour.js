@@ -1,71 +1,106 @@
 'use client'
 
+import { useState, useEffect } from "react"
 import { useAppContext } from "@/app/context/AppContext"
 import Image from "next/image"
 import Link from "next/link"
 import Loading from "./Loading"
-import { tourDates } from "@/data/tourDates" // archivo de datos estático, reemplazable por backend
 
 const Tour = ({ horizontal = false }) => {
   const { favorites, toggleFavorite } = useAppContext()
+  const [tourDates, setTourDates] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  if (!tourDates.length) return <Loading />
+  useEffect(() => {
+    const fetchTourDates = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/tours")
+        if (!res.ok) throw new Error("Error al traer los datos")
+        const data = await res.json()
+        const concerts = data.concerts || []
+
+        const processed = concerts.map(item => ({
+          ...item,
+          id: item._id,
+          date: new Date(item.date).getTime(),
+        }))
+
+        setTourDates(processed)
+      } catch (err) {
+        console.error(err)
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTourDates()
+  }, [])
+
+  if (loading) return <Loading />
+  if (error) return <div className="text-red-500 p-4">{error}</div>
 
   return (
-    <div className="relative pt-20 pb-6 px-10">
+    <div className="relative pt-20 pb-6 px-12">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-md rounded-2xl shadow-2xl pointer-events-none" />
       <div className="relative z-10">
-        <h2 className="px-10 text-3xl font-bold mb-10 text-left">
+        <h2 className="px-4 text-3xl font-bold mb-12 text-left">
           Fechas del Tour - The Driver Era
         </h2>
 
-        <div className={`px-10 py-12 gap-8 ${
+        <div className={`px-4 py-12 gap-8 ${
           horizontal
             ? "flex overflow-x-auto space-x-6 scrollbar-hide"
-            : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+            : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         }`}>
           {tourDates.map(show => {
             const isFav = favorites.some(fav => fav.id === show.id)
-
+            
             return (
-              <div key={show.id} className="relative bg-neutral-900/80 border border-neutral-700 shadow-md rounded-lg overflow-hidden flex flex-col h-96 w-full sm:w-[300px] md:w-80 transition-transform duration-300 hover:scale-105 flex-none">
-                <div className="h-40 w-full relative">
-                  <Image src={show.image} alt={show.city} fill style={{ objectFit: "cover" }} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+              <div 
+                key={show.id} 
+                className="relative rounded-lg overflow-hidden h-96 w-full sm:w-[300px] md:w-80 transition-transform duration-300 hover:scale-105 flex-none shadow-lg border border-neutral-700 m-2"
+              >
+                {/*img con gradiente */}
+                <div className="relative w-full h-full">
+                  <Image
+                    loader={({ src }) => `http://localhost:4000${src}`}
+                    src={show.image}
+                    alt={show.city}
+                    fill
+                    style={{ objectFit: "cover" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent" />
                 </div>
 
-                <div className="relative z-10 flex flex-col justify-between p-4 flex-1">
-                  <div>
-                    <h3 className="text-xl font-semibold mb-1">{show.city}</h3>
-                    <p className="text-gray-400 mb-1">{show.venue}</p>
-                    <p className="text-gray-200 font-medium mb-2">
-                      {new Date(show.date).toLocaleDateString("es-AR", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric"
-                      })}
-                    </p>
-                    <p className="text-gray-300 font-light mb-2">Precio base: ${show.price}</p>
-                  </div>
-
-                  {/* Botones en columna */}
-                  <div className="mt-2 flex flex-col items-start gap-2">
-                    <button
-                      onClick={() => toggleFavorite(show)}
-                      className={`text-2xl transition-transform duration-300 hover:scale-125 ${isFav ? "text-red-500" : "text-gray-300"}`}
-                    >
-                      {isFav ? "♥" : "♡"}
-                    </button>
-
-                    <Link
-                      href={`/entradas/${show.id}`}
-                      className="text-white border border-white px-3 py-1 rounded text-center hover:bg-white hover:text-black transition w-full"
-                    >
-                      Comprar Entradas
-                    </Link>
-                  </div>
-
+                <div className="absolute bottom-16 left-4 right-4 flex flex-col gap-2 mb-2">
+                  <h3 className="text-xl font-semibold text-white">{show.city}</h3>
+                  <p className="text-gray-300">{show.venue}</p>
+                  <p className="text-gray-200 font-medium">
+                    {new Date(show.date).toLocaleDateString("es-AR", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric"
+                    })}
+                  </p>
                 </div>
+
+                {/*bton de favs*/}
+                <button
+                  onClick={() => toggleFavorite(show)}
+                  className={`absolute top-4 right-4 cursor-pointer text-2xl transition-transform duration-300 hover:scale-125 ${isFav ? "text-red-500" : "text-gray-300"}`}
+                >
+                  {isFav ? "♥" : "♡"}
+                </button>
+
+                {/*boton comprar entradass nash*/}
+                <Link
+                  href={`/entradas/${show.id}`} 
+                  className="absolute bottom-4 left-4 cursor-pointer text-white border border-white px-5 py-2 rounded hover:bg-white hover:text-black transition"
+                >
+                  Comprar Entradas
+                </Link>
               </div>
             )
           })}

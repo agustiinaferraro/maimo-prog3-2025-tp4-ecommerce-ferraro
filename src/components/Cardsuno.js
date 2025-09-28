@@ -3,22 +3,36 @@
 import Image from "next/image"
 import { useState, useEffect } from "react"
 
-const fanarts = [
-  { src: "/flyer1.jpg", author: "@autor1" },
-  { src: "/flyer2.jpg", author: "@autor2" },
-  { src: "/flyer3.jpg", author: "@autor3" },
-  { src: "/flyer4.jpg", author: "@autor4" },
-]
-
 const Cardsuno = () => {
+  const [fanarts, setFanarts] = useState([])
   const [startIndex, setStartIndex] = useState(0)
 
+  //trae los fanarts desde la apii
   useEffect(() => {
+    const fetchFanarts = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/fanart")
+        if (!res.ok) throw new Error("Error al traer los fanarts")
+        const data = await res.json()
+        setFanarts(data.fanarts || [])
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchFanarts()
+  }, [])
+
+  //rotacion de imgs cada 3 segundos
+  useEffect(() => {
+    if (fanarts.length === 0) return
     const interval = setInterval(() => {
       setStartIndex(prev => (prev + 2) % fanarts.length)
     }, 3000)
     return () => clearInterval(interval)
-  }, [])
+  }, [fanarts])
+
+  if (fanarts.length === 0) return null
 
   const visibleFanarts = [
     fanarts[startIndex],
@@ -49,35 +63,29 @@ const Cardsuno = () => {
         }}
       >
         {visibleFanarts.map((fanart, idx) => (
-          <div key={idx} style={{ textAlign: "center" }}>
+          <div key={fanart._id} style={{ textAlign: "center" }}>
             <div
               style={{
                 width: "350px",
                 height: "500px",
-                borderRadius: "15px", // asegura borde completo
+                borderRadius: "15px",
                 overflow: "hidden",
                 boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
                 transition: "transform 0.3s, box-shadow 0.3s",
                 marginBottom: idx % 2 === 0 ? "80px" : "40px",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-10px)"
-                e.currentTarget.style.boxShadow = "0 20px 30px rgba(0,0,0,0.4)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)"
-                e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.3)"
+                cursor: "pointer"
               }}
             >
               <Image
-                src={fanart.src}
-                alt={fanart.author}
+                loader={({ src }) => `http://localhost:4000${src}`}
+                src={fanart.image}
+                alt={fanart.artist}
                 width={350}
                 height={500}
-                style={{ objectFit: "cover", borderRadius: "15px" }} // agregamos aquí también
+                style={{ objectFit: "cover", borderRadius: "15px" }}
               />
             </div>
-            <p className="text-white mt-2">{fanart.author}</p>
+            <p className="text-white mt-2">{fanart.artist}</p>
           </div>
         ))}
       </div>

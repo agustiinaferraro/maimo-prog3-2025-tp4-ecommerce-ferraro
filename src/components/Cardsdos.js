@@ -4,24 +4,44 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 
-const recitales = [
-  { src: "/flyer3.jpg" },
-  { src: "/flyer4.jpg" },
-  { src: "/flyer1.jpg" },
-  { src: "/flyer2.jpg" },
-]
-
 const Cardsdos = () => {
+  const [recitales, setRecitales] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
 
+  //trae las fechas de los conciertos desde el backend
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 2) % recitales.length) // rotan de a 2
-    }, 4000) // cada 4 segundos
-    return () => clearInterval(interval)
+    const fetchConcerts = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/tours")
+        const data = await res.json()
+        const concerts = data.concerts || []
+
+        // Procesar datos para solo lo necesario
+        const processed = concerts.map(item => ({
+          id: item._id,
+          image: item.image,
+          city: item.city,
+          ticketUrl: item.ticketUrl
+        }))
+        setRecitales(processed)
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchConcerts()
   }, [])
 
-  // calculo los dos flyers que se muestran
+  //rota imgs cada 4 segundos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 2) % recitales.length)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [recitales.length])
+
+  if (recitales.length === 0) return null
+
   const firstIndex = currentIndex
   const secondIndex = (currentIndex + 1) % recitales.length
 
@@ -50,67 +70,31 @@ const Cardsdos = () => {
           marginBottom: "40px",
         }}
       >
-        <div
-          style={{
-            width: "350px",
-            height: "500px",
-            marginBottom: "50px",
-            borderRadius: "15px",
-            overflow: "hidden",
-            boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
-            transition: "transform 0.3s, box-shadow 0.3s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-10px)"
-            e.currentTarget.style.boxShadow = "0 20px 30px rgba(0,0,0,0.4)"
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0)"
-            e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.3)"
-          }}
-        >
-          <Image
-            src={recitales[firstIndex].src}
-            alt="Flyer Recital 1"
-            width={350}
-            height={500}
-            style={{ objectFit: "cover", borderRadius: "15px" }}
-          />
-        </div>
-
-        <div
-          style={{
-            width: "350px",
-            height: "500px",
-            marginBottom: "10px", // un poquito más arriba
-            borderRadius: "15px",
-            overflow: "hidden",
-            boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
-            transition: "transform 0.3s, box-shadow 0.3s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-10px)"
-            e.currentTarget.style.boxShadow = "0 20px 30px rgba(0,0,0,0.4)"
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0)"
-            e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.3)"
-          }}
-        >
-          <Image
-            src={recitales[secondIndex].src}
-            alt="Flyer Recital 2"
-            width={350}
-            height={500}
-            style={{ objectFit: "cover", borderRadius: "15px" }}
-          />
-        </div>
+        {[firstIndex, secondIndex].map((i, idx) => {
+          const show = recitales[i]
+          return (
+            <Link
+              key={`${show.id}-${idx}`}
+              href={show.ticketUrl}
+              className="relative w-[350px] h-[500px] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105 cursor-pointer"
+            >
+              <Image
+                loader={({ src }) => `http://localhost:4000${src}`}
+                src={show.image}
+                alt={show.city}
+                fill
+                style={{ objectFit: "cover" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+            </Link>
+          )
+        })}
       </div>
 
-      {/* Botón para ir a entradas */}
+      {/*boton para ir a entradas */}
       <div className="flex justify-center">
         <Link href="/tour">
-          <button className="bg-green-500 text-black font-bold py-3 px-8 rounded-lg hover:bg-green-600 transition">
+          <button className="bg-green-500 text-black font-bold py-3 px-8 rounded-lg hover:bg-green-600 transition mt-4 cursor-pointer">
             Comprar Entradas
           </button>
         </Link>

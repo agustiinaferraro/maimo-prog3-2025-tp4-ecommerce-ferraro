@@ -20,7 +20,7 @@ const ProductControls = ({ product, options = [] }) => {
         <p className="text-white text-sm md:text-base font-light">{price}</p>
       </div>
 
-      {/* selector de opciones, si existen */}
+      {/*selector de opciones, si existen */}
       {options.length > 0 && (
         <select
           value={selectedOption}
@@ -31,7 +31,7 @@ const ProductControls = ({ product, options = [] }) => {
         </select>
       )}
 
-      {/* controles de carrito */}
+      {/*controles de carrito */}
       <div className="flex items-center gap-2">
         {quantity > 0 ? (
           <>
@@ -43,7 +43,7 @@ const ProductControls = ({ product, options = [] }) => {
           <button onClick={e => { e.preventDefault(); toggleCart(product) }} className="text-white">+</button>
         )}
 
-        {/* favorito */}
+        {/* fav */}
         <button
           onClick={e => { e.preventDefault(); toggleFavorite(product) }}
           className={`text-white text-xl ${isFavorite ? "text-red-500" : ""}`}

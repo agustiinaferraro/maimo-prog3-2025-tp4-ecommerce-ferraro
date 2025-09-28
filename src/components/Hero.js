@@ -11,7 +11,6 @@ const Hero = () => {
   const [fade, setFade] = useState(true);// controla la opacidad para efecto fade
                                         // true = visible, false = desvanecido
   const router = useRouter(); //hook para navegar a otra pagina
-  const IMAGE_BASE = "https://image.tmdb.org/t/p/original/";
 
   const handleClick = () => {
     if (products && products.length > 0) {
@@ -59,7 +58,8 @@ const Hero = () => {
         key={currentProduct.id}
         className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ${fade ? "opacity-100" : "opacity-0"}`}
         style={{ 
-          backgroundImage: `url(${IMAGE_BASE}${currentProduct.backdrop_path || currentProduct.poster_path})`, 
+          // uso directo de las rutas de Drive que vienen del context
+          backgroundImage: `url(${currentProduct.backdrop_path || currentProduct.poster_path})`, 
           filter: "brightness(70%)" // img oscura
         }}
       ></div>
