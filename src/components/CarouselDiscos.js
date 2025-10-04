@@ -8,7 +8,7 @@ import Image from "next/image"
 const CarouselDiscos = () => {
   const { products, favorites, toggleFavorite, cart, incrementCartItem, decrementCartItem, toggleCart } = useAppContext()
 
-  // filtra solo los productos que tengan al menos una img valida
+  //filtra solo los productos que tengan al menos una img válida
   const discos = (products || []).filter(p => p && p.backdrop_path)
 
   if (discos.length === 0) return <Loading />
@@ -23,10 +23,11 @@ const CarouselDiscos = () => {
       </h2>
       <div className="flex gap-6 whitespace-nowrap animate-carousel">
         {loopDiscos.map((disco, index) => {
+          // chequea por id para que funcione con todos los duplicados
           const isFav = favorites.some(fav => fav.id === disco.id)
           const cartItem = cart.find(item => item.id === disco.id)
 
-          // usa el price de la primera variante si existe
+          //usa el price de la primera variante si existe
           const price = disco.variants && disco.variants.length > 0
             ? `$${disco.variants[0].price}`
             : '$10.00';
@@ -39,8 +40,8 @@ const CarouselDiscos = () => {
             >
               <div className="relative">
                 <Image
-                  loader={({ src }) => src} // loader personalizado para localhost y URLs externas
-                  src={disco.backdrop_path} // linkk back
+                  loader={({ src }) => src} 
+                  src={disco.backdrop_path}
                   alt={disco.title || 'Producto'}
                   width={500}
                   height={300}
@@ -60,7 +61,7 @@ const CarouselDiscos = () => {
                 <div className="absolute bottom-2 right-2 flex items-center gap-2">
                   {!cartItem ? (
                     <button
-                      onClick={(e) => { e.preventDefault(); toggleCart(disco) }}
+                      onClick={(e) => { e.preventDefault(); toggleCart({ ...disco, type: "product" }) }}
                       className="text-white text-2xl cursor-pointer bg-black/60 rounded-full w-8 h-8 flex items-center justify-center transition-transform duration-300 hover:scale-125"
                     >+</button>
                   ) : (
@@ -78,7 +79,7 @@ const CarouselDiscos = () => {
                   )}
 
                   <button
-                    onClick={(e) => { e.preventDefault(); toggleFavorite(disco) }}
+                    onClick={(e) => { e.preventDefault(); toggleFavorite({ ...disco, type: "product" }) }}
                     className={`text-3xl transition-transform duration-300 hover:scale-125 ${isFav ? "text-red-500" : "text-gray-300"}`}
                   >
                     {isFav ? "♥" : "♡"}

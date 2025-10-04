@@ -136,7 +136,7 @@ export const AppProvider = ({ children }) => {
     }
   }, []);
 
-  //obtener un producto por id
+  //obtoen un producto por id
   const fetchProductById = useCallback(async (productId) => {
     try {
       const res = await axios.get(`${API_URL}/products/${productId}`);

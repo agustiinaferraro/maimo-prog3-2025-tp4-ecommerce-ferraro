@@ -1,45 +1,45 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from "react"
-import { useAppContext } from "@/app/context/AppContext"
-import Image from "next/image"
-import Link from "next/link"
-import Loading from "./Loading"
+import { useState, useEffect } from "react";
+import { useAppContext } from "@/app/context/AppContext";
+import Image from "next/image";
+import Link from "next/link";
+import Loading from "./Loading";
 
 const Tour = ({ horizontal = false }) => {
-  const { favorites, toggleFavorite } = useAppContext()
-  const [tourDates, setTourDates] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { favorites, toggleFavorite } = useAppContext();
+  const [tourDates, setTourDates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTourDates = async () => {
       try {
-        const res = await fetch("http://localhost:4000/tours")
-        if (!res.ok) throw new Error("Error al traer los datos")
-        const data = await res.json()
-        const concerts = data.concerts || []
+        const res = await fetch("http://localhost:4000/tours");
+        if (!res.ok) throw new Error("Error al traer los datos");
+        const data = await res.json();
+        const concerts = data.concerts || [];
 
         const processed = concerts.map(item => ({
           ...item,
           id: item._id,
           date: new Date(item.date).getTime(),
-        }))
+        }));
 
-        setTourDates(processed)
+        setTourDates(processed);
       } catch (err) {
-        console.error(err)
-        setError(err.message)
+        console.error(err);
+        setError(err.message);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchTourDates()
-  }, [])
+    fetchTourDates();
+  }, []);
 
-  if (loading) return <Loading />
-  if (error) return <div className="text-red-500 p-4">{error}</div>
+  if (loading) return <Loading />;
+  if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
     <div className="relative pt-20 pb-6 px-12">
@@ -55,8 +55,8 @@ const Tour = ({ horizontal = false }) => {
             : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         }`}>
           {tourDates.map(show => {
-            const isFav = favorites.some(fav => fav.id === show.id)
-            
+            const isFav = favorites.some(fav => fav.id === show.id && fav.type === "tour");
+
             return (
               <div 
                 key={show.id} 
@@ -86,15 +86,29 @@ const Tour = ({ horizontal = false }) => {
                   </p>
                 </div>
 
-                {/*bton de favs*/}
+                {/*boton de favs */}
                 <button
-                  onClick={() => toggleFavorite(show)}
+                  onClick={() => toggleFavorite({
+                    id: show.id,
+                    type: "tour", // diferencia de merch
+                    title: show.city,
+                    overview: show.venue,
+                    poster_path: show.image ? `http://localhost:4000${show.image}` : "/img/placeholder.png",
+                    variants: [
+                      {
+                        price: 5000, //precio ficticio
+                        image: show.image ? `http://localhost:4000${show.image}` : "/img/placeholder.png",
+                        color: "default",
+                        sizes: []
+                      }
+                    ]
+                  })}
                   className={`absolute top-4 right-4 cursor-pointer text-2xl transition-transform duration-300 hover:scale-125 ${isFav ? "text-red-500" : "text-gray-300"}`}
                 >
                   {isFav ? "♥" : "♡"}
                 </button>
 
-                {/*boton comprar entradass nash*/}
+                {/*boton comprar entradas */}
                 <Link
                   href={`/entradas/${show.id}`} 
                   className="absolute bottom-4 left-4 cursor-pointer text-white border border-white px-5 py-2 rounded hover:bg-white hover:text-black transition"
@@ -102,12 +116,12 @@ const Tour = ({ horizontal = false }) => {
                   Comprar Entradas
                 </Link>
               </div>
-            )
+            );
           })}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Tour
+export default Tour;
