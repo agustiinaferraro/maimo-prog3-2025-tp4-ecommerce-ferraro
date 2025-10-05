@@ -13,7 +13,7 @@ export const AppProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  //favs
+  // favs
   const toggleFavorite = (product) => {
     setFavorites(prev =>
       prev.some(p => p.id === product.id)
@@ -22,7 +22,7 @@ export const AppProvider = ({ children }) => {
     );
   };
 
-  //carrito
+  // carrito
   const toggleCart = (product, quantity = 1) => {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
@@ -57,7 +57,10 @@ export const AppProvider = ({ children }) => {
     setCart(prev => prev.filter(item => item.id !== productId));
   };
 
-  //fetch productos
+  // vacia carrito
+  const clearCart = () => setCart([]);
+
+  // fetch productos
   const fetchAllProducts = useCallback(async () => {
     try {
       const res = await axios.get(`${API_URL}/products`);
@@ -100,9 +103,7 @@ export const AppProvider = ({ children }) => {
     }
   }, []);
 
-  // funciones con usecallback
-
-  // obtiene productos de una categoria especofica
+  //productos por categoria
   const fetchProductsByCategory = useCallback(async (categoryId) => {
     try {
       const res = await axios.get(`${API_URL}/products`);
@@ -136,7 +137,7 @@ export const AppProvider = ({ children }) => {
     }
   }, []);
 
-  //obtoen un producto por id
+  //producto por id
   const fetchProductById = useCallback(async (productId) => {
     try {
       const res = await axios.get(`${API_URL}/products/${productId}`);
@@ -144,7 +145,7 @@ export const AppProvider = ({ children }) => {
 
       if (!product) return null;
 
-      const formatted = {
+      return {
         id: product._id,
         title: product.title,
         overview: product.overview,
@@ -162,8 +163,6 @@ export const AppProvider = ({ children }) => {
           price: v.price
         }))
       };
-
-      return formatted;
     } catch (err) {
       console.error("Error fetchProductById:", err);
       return null;
@@ -188,6 +187,7 @@ export const AppProvider = ({ children }) => {
         removeFromCart,
         incrementCartItem,
         decrementCartItem,
+        clearCart, //vacia carrito
         categories,
         fetchProductsByCategory,
         fetchProductById,
