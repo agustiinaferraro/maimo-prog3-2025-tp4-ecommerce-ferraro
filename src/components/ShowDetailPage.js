@@ -1,12 +1,15 @@
 'use client'
 
 import { useAppContext } from "@/app/context/AppContext"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 
 const ShowDetailPage = ({ show }) => {
   const { toggleCart, cart } = useAppContext()
-  const cartItem = cart.find(item => item.id === show.id)
+
+  //nombre de sector por defecto
+  const defaultSectorName = show.sectors?.[0]?.name || "Campo"
+  const cartItem = cart.find(item => item.id === show.id && item.sector === defaultSectorName)
 
   const [selectedSector, setSelectedSector] = useState(
     show.sectors ? show.sectors[0] : { name: "Campo", priceModifier: 1 }
@@ -26,22 +29,27 @@ const ShowDetailPage = ({ show }) => {
       quantity,
       sector: selectedSector.name,
       price: basePrice * selectedSector.priceModifier
-    })
+    }, quantity)
   }
+
+  // si cambia el sector, actualiza quantity segun cart
+  useEffect(() => {
+    const itemInCart = cart.find(item => item.id === show.id && item.sector === selectedSector.name)
+    setQuantity(itemInCart?.quantity || 1)
+  }, [selectedSector, cart, show.id])
 
   return (
     <div className="px-5 md:px-20 py-10 text-white flex flex-col gap-6">
-      {/*banner */}
+      {/* banner*/}
       <div className="relative w-full h-80 md:h-96 rounded-lg overflow-hidden">
         {show.image ? (
           <>
-            {/*fondo difuminado*/}
+            {/*fondo difuminado */}
             <div
               className="absolute inset-0 bg-cover bg-center blur-sm"
               style={{ backgroundImage: `url(${show.image.startsWith('/') ? show.image : `/${show.image}`})` }}
             />
-
-            {/* img principal*/}
+            {/*img */}
             <Image
               loader={({ src }) => `http://localhost:4000${src}`}
               src={show.image} 
@@ -50,7 +58,6 @@ const ShowDetailPage = ({ show }) => {
               style={{ objectFit: "cover" }}
               className="relative w-full h-full rounded-lg"
             />
-
           </>
         ) : (
           <div className="w-full h-full bg-gray-800 flex items-center justify-center text-white">
@@ -59,7 +66,7 @@ const ShowDetailPage = ({ show }) => {
         )}
       </div>
 
-      {/*info */}
+      {/* info */}
       <div className="flex flex-col gap-3">
         <h1 className="text-3xl font-bold">{show.city || "Sin ciudad"}</h1>
         <p className="text-gray-300">{show.venue || "Sin venue"}</p>
@@ -74,7 +81,7 @@ const ShowDetailPage = ({ show }) => {
         </p>
       </div>
 
-      {/*selector de sector */}
+      {/* selector de sector*/}
       <div className="flex flex-col gap-2">
         <label className="text-white font-semibold">Sector:</label>
         <select
@@ -85,14 +92,14 @@ const ShowDetailPage = ({ show }) => {
           className="text-white bg-transparent border border-gray-500 rounded px-2 py-1"
         >
           {show.sectors?.map(sec => (
-            <option key={sec._id} value={sec.name}>
+            <option key={sec._id || sec.name} value={sec.name}>
               {sec.name}
             </option>
           ))}
         </select>
       </div>
 
-      {/*cantidad y precio */}
+      {/* cantidad y precio*/}
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2 bg-black/60 rounded px-2 py-1">
           <button
@@ -112,7 +119,7 @@ const ShowDetailPage = ({ show }) => {
         <p className="text-white font-semibold text-lg">Total: ${totalPrice}</p>
       </div>
 
-      {/* boton agregar al carrito*/}
+      {/*boton agregar al carrito*/}
       <button
         onClick={handleAddToCart}
         className="mt-4 bg-green-500 text-black font-bold py-3 rounded-lg hover:bg-green-600 transition"
