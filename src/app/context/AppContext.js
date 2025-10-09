@@ -22,45 +22,103 @@ export const AppProvider = ({ children }) => {
     );
   };
 
+
+//state para conteo total por producto
+const [cardSet, setCardSet] = useState([]); 
+
+//agregar al cardSet
+const addToCardSet = (product, quantity = 1) => {
+  setCardSet(prev => {
+    // busca si ya existe el producto (solo por id)
+    const existing = prev.find(item => item.id === product.id);
+    if (existing) {
+      //si existe suma la cantidad
+      return prev.map(item =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      );
+    }
+    //si no existe agrega el producto
+    return [...prev, { ...product, quantity }];
+  });
+};
+
   // carrito
-  const toggleCart = (product, quantity = 1) => {
-    setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) {
-        return prev.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
-        );
-      }
-      return [...prev, { ...product, quantity }];
-    });
-  };
+const toggleCart = (product, quantity = 1) => {
+  setCart(prev => {
+    //busca item idntico (id + color + size + logo)
+    const existing = prev.find(
+      item =>
+        item.id === product.id &&
+        item.color === product.color &&
+        item.size === product.size &&
+        item.logo === product.logo
+    );
 
-  const incrementCartItem = (productId) => {
-    setCart(prev =>
-      prev.map(item =>
-        item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
+    if (existing) {
+      //si existe suma cantidad
+      return prev.map(item =>
+        item.id === product.id &&
+        item.color === product.color &&
+        item.size === product.size &&
+        item.logo === product.logo
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      );
+    }
+    //si no existe agrega nuevo item
+    return [...prev, { ...product, quantity }];
+  });
+};
+
+const incrementCartItem = (product) => {
+  setCart(prev =>
+    prev.map(item =>
+      item.id === product.id &&
+      item.color === product.color &&
+      item.size === product.size &&
+      item.logo === product.logo
+        ? { ...item, quantity: item.quantity + 1 }
+        : item
+    )
+  );
+};
+
+const decrementCartItem = (product) => {
+  setCart(prev =>
+    prev
+      .map(item =>
+        item.id === product.id &&
+        item.color === product.color &&
+        item.size === product.size &&
+        item.logo === product.logo
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
       )
-    );
-  };
+      .filter(item => item.quantity > 0)
+  );
+};
 
-  const decrementCartItem = (productId) => {
-    setCart(prev =>
-      prev
-        .map(item =>
-          item.id === productId ? { ...item, quantity: item.quantity - 1 } : item
+const removeFromCart = (product) => {
+  setCart(prev =>
+    prev.filter(
+      item =>
+        !(
+          item.id === product.id &&
+          item.color === product.color &&
+          item.size === product.size &&
+          item.logo === product.logo
         )
-        .filter(item => item.quantity > 0)
-    );
-  };
+    )
+  );
+};
 
-  const removeFromCart = (productId) => {
-    setCart(prev => prev.filter(item => item.id !== productId));
-  };
 
   // vacia carrito
   const clearCart = () => setCart([]);
 
-  // fetch productos
+  //fetch productos
   const fetchAllProducts = useCallback(async () => {
     try {
       const res = await axios.get(`${API_URL}/products`);
@@ -192,7 +250,9 @@ export const AppProvider = ({ children }) => {
         fetchProductsByCategory,
         fetchProductById,
         fetchAllProducts, 
-        fetchCategories
+        fetchCategories,
+        cardSet,       
+        addToCardSet 
       }}
     >
       {children}

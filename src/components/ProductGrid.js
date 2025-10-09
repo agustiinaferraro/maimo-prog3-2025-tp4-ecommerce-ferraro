@@ -8,7 +8,6 @@ const ProductGrid = ({ horizontal = false, selectedCategory: externalCategory = 
   const {
     products,
     searchTerm,
-    categories,
     fetchAllProducts,
     fetchProductsByCategory
   } = useAppContext();
@@ -20,7 +19,7 @@ const ProductGrid = ({ horizontal = false, selectedCategory: externalCategory = 
     if (externalCategory) setSelectedCategory(externalCategory);
   }, [externalCategory]);
 
-  //llama a la funcion correcta srgun categoria seleccionada
+  //llama a la funcion correcta según categoria seleccionada
   useEffect(() => {
     if (!selectedCategory || selectedCategory === "all") {
       fetchAllProducts();
@@ -29,7 +28,7 @@ const ProductGrid = ({ horizontal = false, selectedCategory: externalCategory = 
     }
   }, [selectedCategory, fetchAllProducts, fetchProductsByCategory]);
 
-  if (!products || !categories) return <div className="text-white">Cargando productos...</div>;
+  if (!products) return <div className="text-white">Cargando productos...</div>;
 
   //filtra productos por busqueda
   let displayedProducts = searchTerm
@@ -46,43 +45,17 @@ const ProductGrid = ({ horizontal = false, selectedCategory: externalCategory = 
   });
 
   return (
-    <div className="relative pb-6 px-10">
+    <div className="relative pb-6 px-20">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-md rounded-2xl shadow-2xl pointer-events-none z-0" />
 
       <div className="relative z-10 pt-10">
-        {selectedCategory === "all" && (
-          <>
-            <h2 className="px-10 text-3xl font-bold mb-10 text-left text-white">Merch</h2>
-            {/*filtro de categorias */}
-            <div className="flex gap-4 mb-8 px-10 flex-wrap">
-              <button
-                key="all-categories"
-                className={`px-4 py-2 rounded-lg ${selectedCategory === "all" ? "bg-white text-black" : "bg-gray-700 text-white"}`}
-                onClick={() => setSelectedCategory("all")}
-              >
-                Todas
-              </button>
-              {categories.map(cat => (
-                <button
-                  key={cat._id}
-                  className={`px-4 py-2 rounded-lg ${selectedCategory === cat._id ? "bg-white text-black" : "bg-gray-700 text-white"}`}
-                  onClick={() => setSelectedCategory(cat._id)}
-                >
-                  {cat.name}
-                </button>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/*grilla de productos */}
         {Object.entries(productsByCategory).map(([categoryName, products]) => (
           <div key={`category-${categoryName}`} className="mb-12">
             {selectedCategory === "all" && (
               <h3 className="text-2xl font-semibold mb-6 text-white">{categoryName}</h3>
             )}
 
-            <section className={`px-10 py-6 gap-8 ${horizontal ? "flex overflow-x-auto space-x-6 scrollbar-hide" : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"}`}>
+            <section className={` py-6 gap-8 ${horizontal ? "flex overflow-x-auto space-x-6 scrollbar-hide" : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"}`}>
               {products.map(product => (
                 <ProductCard key={product.id || product._id} product={product} />
               ))}

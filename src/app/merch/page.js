@@ -9,6 +9,12 @@ const Page = () => {
   const { categories } = useAppContext();
   const [selectedCategory, setSelectedCategory] = useState("all");
 
+  // nombre de la sección a mostrar arriba
+  const selectedCategoryName =
+    selectedCategory === "all"
+      ? "Toda la Merch"
+      : categories.find(c => c._id === selectedCategory)?.name || "Merch";
+
   return (
     <div className="mt-20 relative min-h-screen">
       {/*boton de volver*/}
@@ -20,11 +26,20 @@ const Page = () => {
         </Link>
       </div>
 
+      {/*nombre de la sección */}
+      <div>
+        <h1 className="text-white text-4xl font-bold text-left py-10 px-20">
+          {selectedCategoryName}
+        </h1>
+      </div>
+
       {/*filtro de categorias*/}
-      <div className="flex gap-4 mb-8 px-10 flex-wrap">
+      <div className="flex gap-4 mb-8 flex-wrap px-20">
         <button
           key="all-categories"
-          className={`px-4 py-2 rounded-lg ${selectedCategory === "all" ? "bg-white text-black" : "bg-gray-700 text-white"}`}
+          className={`px-6 py-2 rounded-lg font-semibold border border-gray-500 cursor-pointer transition-transform duration-200 transform
+                      ${selectedCategory === "all" ? "bg-white text-black" : "bg-black text-white"}
+                      hover:scale-105 active:scale-95`}
           onClick={() => setSelectedCategory("all")}
         >
           Todas
@@ -33,7 +48,9 @@ const Page = () => {
         {categories.map(cat => (
           <button
             key={cat._id}
-            className={`px-4 py-2 rounded-lg ${selectedCategory === cat._id ? "bg-white text-black" : "bg-gray-700 text-white"}`}
+            className={`px-6 py-2 rounded-lg font-semibold border border-gray-500 cursor-pointer transition-transform duration-200 transform
+                        ${selectedCategory === cat._id ? "bg-white text-black" : "bg-black text-white"}
+                        hover:scale-105 active:scale-95`}
             onClick={() => setSelectedCategory(cat._id)}
           >
             {cat.name}
@@ -41,7 +58,7 @@ const Page = () => {
         ))}
       </div>
 
-      {/*grilla de productos */}
+      {/*grilla de productos*/}
       <ProductGrid selectedCategory={selectedCategory} />
     </div>
   );
