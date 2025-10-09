@@ -12,8 +12,20 @@ export default function CheckoutPage() {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState("") // para mostrar modal de error
 
+  // agrupa el carrito por producto (id) sumando cantidades
+  const groupedCart = Object.values(
+    cart.reduce((acc, item) => {
+      if (!acc[item.id]) {
+        acc[item.id] = { ...item, quantity: item.quantity || 0 }
+      } else {
+        acc[item.id].quantity += item.quantity || 0
+      }
+      return acc
+    }, {})
+  )
+
   // calculo total
-  const total = cart.reduce((acc, item) => {
+  const total = groupedCart.reduce((acc, item) => {
     const variantPrice =
       item.price || 
       item.variant?.price ||
@@ -47,16 +59,16 @@ export default function CheckoutPage() {
       if (res.ok) {
         setSuccess(true)
       } else {
-        setError("error al enviar pedido")
+        setError("Error al enviar pedido")
       }
     } catch (err) {
-      setError("error al enviar pedido")
+      setError("Error al enviar pedido")
     } finally {
       setLoading(false)
     }
   }
 
-  if (cart.length === 0) {
+  if (groupedCart.length === 0) {
     return (
       <div className="px-5 md:px-20 py-10 text-center text-white relative min-w-[300px]">
         <div className="absolute top-5 left-5">
@@ -87,7 +99,7 @@ export default function CheckoutPage() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         {/* productos */}
         <div className="md:col-span-8 flex flex-col gap-6">
-          {cart.map((item, index) => {
+          {groupedCart.map((item, index) => {
             const variantPrice =
               item.price ||
               item.variant?.price ||
@@ -128,21 +140,21 @@ export default function CheckoutPage() {
                   <p className="text-gray-300">Precio unitario: ${price}</p>
                   <div className="flex items-center gap-3 mt-2">
                     <button
-                      onClick={() => decrementCartItem(item.id || item._id)}
+                      onClick={() => decrementCartItem(item)}
                       className="bg-gray-700 px-3 py-2 rounded cursor-pointer transition-transform duration-150 hover:scale-110 active:scale-95"
                     >
                       -
                     </button>
                     <span>{item.quantity}</span>
                     <button
-                      onClick={() => incrementCartItem(item.id || item._id)}
+                      onClick={() => incrementCartItem(item)}
                       className="bg-gray-700 px-3 py-2 rounded cursor-pointer transition-transform duration-150 hover:scale-110 active:scale-95"
                     >
                       +
                     </button>
 
                     <button
-                      onClick={() => removeFromCart(item.id || item._id)}
+                      onClick={() => removeFromCart(item)}
                       className="ml-4 text-red-500 cursor-pointer transition-transform duration-150 hover:scale-110 active:scale-95 hover:text-red-600 active:text-red-700"
                     >
                       🗑️
@@ -161,7 +173,7 @@ export default function CheckoutPage() {
           {/* input email */}
           <input
             type="email"
-            placeholder="tu email"
+            placeholder="Tu email"
             value={userEmail}
             onChange={(e) => setUserEmail(e.target.value)}
             className="p-2 rounded text-black w-full bg-white"
@@ -170,7 +182,7 @@ export default function CheckoutPage() {
 
           {/* ticket resumen */}
           <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
-            {cart.map((item, index) => {
+            {groupedCart.map((item, index) => {
               const variantPrice =
                 item.price ||
                 item.variant?.price ||

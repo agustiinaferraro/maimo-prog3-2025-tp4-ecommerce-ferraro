@@ -1,20 +1,22 @@
 'use client';
 
-import { useAppContext } from "@/app/context/AppContext"
-import Link from "next/link"
-import Loading from "./Loading"
-import Image from "next/image"
+import { useAppContext } from "@/app/context/AppContext";
+import Link from "next/link";
+import Loading from "./Loading";
+import Image from "next/image";
 
 const CarouselDiscos = () => {
-  const { products, favorites, toggleFavorite, cart, incrementCartItem, decrementCartItem, toggleCart } = useAppContext()
+  const { products, favorites, toggleFavorite, cart, incrementCartItem, decrementCartItem, toggleCart } = useAppContext();
 
-  //filtra solo los productos que tengan al menos una img válida
-  const discos = (products || []).filter(p => p && p.backdrop_path)
+  //filtra solo productos con fondo categoria discos
+  const discos = (products || []).filter(
+    p => p?.backdrop_path && p?.categories?.some(cat => cat.slug === "discos")
+  );
 
-  if (discos.length === 0) return <Loading />
+  if (discos.length === 0) return <Loading />;
 
-  // duplica el array para crear un loop infinito
-  const loopDiscos = [...discos, ...discos]
+  //duplica el array para crear loop infinito
+  const loopDiscos = [...discos, ...discos];
 
   return (
     <div className="relative w-full overflow-hidden py-5">
@@ -23,11 +25,9 @@ const CarouselDiscos = () => {
       </h2>
       <div className="flex gap-6 whitespace-nowrap animate-carousel">
         {loopDiscos.map((disco, index) => {
-          // chequea por id para que funcione con todos los duplicados
-          const isFav = favorites.some(fav => fav.id === disco.id)
-          const cartItem = cart.find(item => item.id === disco.id)
+          const isFav = favorites.some(fav => fav.id === disco.id);
+          const cartItem = cart.find(item => item.id === disco.id);
 
-          //usa el price de la primera variante si existe
           const price = disco.variants && disco.variants.length > 0
             ? `$${disco.variants[0].price}`
             : '$10.00';
@@ -41,7 +41,7 @@ const CarouselDiscos = () => {
               <div className="relative">
                 <Image
                   loader={({ src }) => src} 
-                  src={disco.backdrop_path}
+                  src={disco.poster_path || disco.backdrop_path}
                   alt={disco.title || 'Producto'}
                   width={500}
                   height={300}
@@ -87,7 +87,7 @@ const CarouselDiscos = () => {
                 </div>
               </div>
             </Link>
-          )
+          );
         })}
       </div>
 
@@ -98,11 +98,11 @@ const CarouselDiscos = () => {
         }
         .animate-carousel {
           display: inline-flex;
-          animation: carousel 120s linear infinite;
+          animation: carousel 30s linear infinite;
         }
       `}</style>
     </div>
-  )
-}
+  );
+};
 
-export default CarouselDiscos
+export default CarouselDiscos;

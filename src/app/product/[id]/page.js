@@ -8,27 +8,38 @@ import { useParams } from 'next/navigation';
 
 export default function Page() {
   const { products, fetchProductById } = useAppContext();
-  const params = useParams();           // obtiene params 
-  const [id, setId] = useState(null);
+  const params = useParams();
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (params?.id) setId(params.id);  // accede a id
-  }, [params]);
+    if (!params?.id) return;
 
-  // carga producto desde contexto o fetch si no está
-  useEffect(() => {
-    if (!id) return;
+    const id = params.id;
+    setLoading(true);
 
-    const found = products.find(p => String(p._id) === String(id));
-    if (found) setProduct(found);
-    else {
-      fetchProductById(id).then(p => setProduct(p));
+    // prumero busca en productos del contexto
+    const found = products.find(p => String(p.id) === String(id));
+
+    if (found) {
+      setProduct(found);
+      setLoading(false);
+    } else {
+      // Si no esta hace fetch desde la apu
+      fetchProductById(id).then(p => {
+        if (p) setProduct(p);
+        setLoading(false);
+      });
     }
-  }, [id, products, fetchProductById]);
+  }, [params, products, fetchProductById]);
 
-  // espera que el producto se cargue antes de mostrar detalle
-  if (!product) return <Loading />;
+  if (loading) return <Loading />;
 
-  return <ProductDetail id={product._id} />; // pasar _id
+  if (!product) return (
+    <div className="text-white text-center mt-20 text-xl">
+      Producto no encontrado
+    </div>
+  );
+
+  return <ProductDetail id={product.id} />;
 }
