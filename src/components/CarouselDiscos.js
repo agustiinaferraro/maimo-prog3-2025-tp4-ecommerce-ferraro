@@ -6,16 +6,16 @@ import Loading from "./Loading";
 import Image from "next/image";
 
 const CarouselDiscos = () => {
-  const { products, favorites, toggleFavorite, cart, incrementCartItem, decrementCartItem, toggleCart } = useAppContext();
+  const { products, favorites, toggleFavorite } = useAppContext();
 
-  //filtra solo productos con fondo categoria discos
+  // filtra solo productos con fondo categoria discos
   const discos = (products || []).filter(
     p => p?.backdrop_path && p?.categories?.some(cat => cat.slug === "discos")
   );
 
   if (discos.length === 0) return <Loading />;
 
-  //duplica el array para crear loop infinito
+  // duplica el array para crear loop infinito
   const loopDiscos = [...discos, ...discos];
 
   return (
@@ -26,8 +26,6 @@ const CarouselDiscos = () => {
       <div className="flex gap-6 whitespace-nowrap animate-carousel">
         {loopDiscos.map((disco, index) => {
           const isFav = favorites.some(fav => fav.id === disco.id);
-          const cartItem = cart.find(item => item.id === disco.id);
-
           const price = disco.variants && disco.variants.length > 0
             ? `$${disco.variants[0].price}`
             : '$10.00';
@@ -40,7 +38,7 @@ const CarouselDiscos = () => {
             >
               <div className="relative">
                 <Image
-                  loader={({ src }) => src} 
+                  loader={({ src }) => src}
                   src={disco.poster_path || disco.backdrop_path}
                   alt={disco.title || 'Producto'}
                   width={500}
@@ -58,33 +56,12 @@ const CarouselDiscos = () => {
                   </div>
                 </div>
 
-                <div className="absolute bottom-2 right-2 flex items-center gap-2">
-                  {!cartItem ? (
-                    <button
-                      onClick={(e) => { e.preventDefault(); toggleCart({ ...disco, type: "product" }) }}
-                      className="text-white text-2xl cursor-pointer bg-black/60 rounded-full w-8 h-8 flex items-center justify-center transition-transform duration-300 hover:scale-125"
-                    >+</button>
-                  ) : (
-                    <div className="flex items-center gap-1 bg-black/60 rounded px-2 py-1">
-                      <button
-                        onClick={(e) => { e.preventDefault(); decrementCartItem(disco.id) }}
-                        className="text-white font-bold px-1"
-                      >-</button>
-                      <span className="text-white font-semibold">{cartItem.quantity}</span>
-                      <button
-                        onClick={(e) => { e.preventDefault(); incrementCartItem(disco.id) }}
-                        className="text-white font-bold px-1"
-                      >+</button>
-                    </div>
-                  )}
-
-                  <button
-                    onClick={(e) => { e.preventDefault(); toggleFavorite({ ...disco, type: "product" }) }}
-                    className={`text-3xl transition-transform duration-300 hover:scale-125 ${isFav ? "text-red-500" : "text-gray-300"}`}
-                  >
-                    {isFav ? "♥" : "♡"}
-                  </button>
-                </div>
+                <button
+                  onClick={(e) => { e.preventDefault(); toggleFavorite({ ...disco, type: "product" }) }}
+                  className={`absolute bottom-2 right-2 text-3xl transition-transform duration-300 hover:scale-125 ${isFav ? "text-red-500" : "text-gray-300"}`}
+                >
+                  {isFav ? "♥" : "♡"}
+                </button>
               </div>
             </Link>
           );

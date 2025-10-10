@@ -16,9 +16,9 @@ export const AppProvider = ({ children }) => {
   // favs
   const toggleFavorite = (product) => {
     setFavorites(prev =>
-      prev.some(p => p.id === product.id)
-        ? prev.filter(p => p.id !== product.id)
-        : [...prev, product]
+      prev.some(p => p.id === product.id)//some verifica si algun elemento cumple con la condicion
+        ? prev.filter(p => p.id !== product.id)//filter crea un array con los elementos que cumplan esa condicion
+        : [...prev, product]//actualozo
     );
   };
 
@@ -29,7 +29,7 @@ const [cardSet, setCardSet] = useState([]);
 //agregar al cardSet
 const addToCardSet = (product, quantity = 1) => {
   setCardSet(prev => {
-    // busca si ya existe el producto (solo por id)
+    // find busca si ya existe el producto (solo por id)
     const existing = prev.find(item => item.id === product.id);
     if (existing) {
       //si existe suma la cantidad
@@ -73,9 +73,9 @@ const toggleCart = (product, quantity = 1) => {
 };
 
 const incrementCartItem = (product) => {
-  setCart(prev =>
-    prev.map(item =>
-      item.id === product.id &&
+  setCart(prev => //prev es el carrito 
+    prev.map(item => //item es cada producto del carrito
+      item.id === product.id && //product es el que se esta intentando agregar
       item.color === product.color &&
       item.size === product.size &&
       item.logo === product.logo
@@ -122,9 +122,9 @@ const removeFromCart = (product) => {
   const fetchAllProducts = useCallback(async () => {
     try {
       const res = await axios.get(`${API_URL}/products`);
-      const rawProducts = Array.isArray(res.data.products) ? res.data.products : [];
+      const rawProducts = Array.isArray(res.data.products) ? res.data.products : []; //veirifico si es o no un array lo que recibo
 
-      const data = rawProducts.map(product => ({
+      const data = rawProducts.map(product => ({ //obtengo y transformi el valor de los productos
         id: product._id,
         title: product.title,
         overview: product.overview,

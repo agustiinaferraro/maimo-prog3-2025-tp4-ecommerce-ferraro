@@ -6,17 +6,20 @@ import Image from "next/image"
 import Link from "next/link"
 
 export default function CheckoutPage() {
-  const { cart, incrementCartItem, decrementCartItem, removeFromCart, clearCart } = useAppContext()
+  const { cart, incrementCartItem, decrementCartItem, removeFromCart, clearCart } = useAppContext() //agarro del context
   const [userEmail, setUserEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
-  const [error, setError] = useState("") // para mostrar modal de error
+  const [error, setError] = useState("") //para mostrar modal de error
+  const [orderNumber, setOrderNumber] = useState("")
+  const [userName, setUserName] = useState("")
+  const [companyName, setCompanyName] = useState("")
 
   // agrupa el carrito por producto (id) sumando cantidades
-  const groupedCart = Object.values(
-    cart.reduce((acc, item) => {
+  const groupedCart = Object.values( //objet.value devuelve un array con las propiedades 
+    cart.reduce((acc, item) => { //con reduce acumulo 
       if (!acc[item.id]) {
-        acc[item.id] = { ...item, quantity: item.quantity || 0 }
+        acc[item.id] = { ...item, quantity: item.quantity || 0 }// ... actualizo
       } else {
         acc[item.id].quantity += item.quantity || 0
       }
@@ -24,23 +27,23 @@ export default function CheckoutPage() {
     }, {})
   )
 
-  // calculo total
-  const total = groupedCart.reduce((acc, item) => {
+  //calculo total
+  const total = groupedCart.reduce((acc, item) => { //acumulo
     const variantPrice =
       item.price || 
-      item.variant?.price ||
+      item.variant?.price || //variantes del prod
       item.variants?.[0]?.price?.$numberInt ||
       item.variants?.[0]?.price ||
       0
 
-    const price = Number(variantPrice)
+    const price = Number(variantPrice)//number convierte el valor a numero
     return acc + price * (item.quantity || 0)
   }, 0)
 
-  // valido email
+  //valido mail
   const validateEmail = (email) => email.includes("@")
 
-  // manejar checkout
+  //manejo checkout
   const handleCheckout = async () => {
     if (!validateEmail(userEmail)) {
       setError("por favor ingresa un email válido")
@@ -53,14 +56,17 @@ export default function CheckoutPage() {
       const res = await fetch("http://localhost:4000/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cart, userEmail }),
+        body: JSON.stringify({ cart, userEmail, userName, companyName }), //convierto a string
       })
 
       if (res.ok) {
+        const data = await res.json()
+        setOrderNumber(data.orderNumber || "")
         setSuccess(true)
       } else {
         setError("Error al enviar pedido")
       }
+
     } catch (err) {
       setError("Error al enviar pedido")
     } finally {
@@ -132,7 +138,7 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                {/* info producto */}
+                {/*info producto*/}
                 <div className="flex-1 flex flex-col justify-between h-full">
                   <h2 className="text-lg md:text-xl font-semibold">
                     {item.title || item.city || "sin nombre"}
@@ -170,16 +176,6 @@ export default function CheckoutPage() {
         <div className="md:col-span-4 bg-neutral-900/80 p-6 rounded-lg flex flex-col gap-6 min-w-[250px]">
           <h2 className="text-xl font-bold">Resumen de mi pedido</h2>
 
-          {/* input email */}
-          <input
-            type="email"
-            placeholder="Tu email"
-            value={userEmail}
-            onChange={(e) => setUserEmail(e.target.value)}
-            className="p-2 rounded text-black w-full bg-white"
-            required
-          />
-
           {/* ticket resumen */}
           <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto">
             {groupedCart.map((item, index) => {
@@ -199,44 +195,120 @@ export default function CheckoutPage() {
                 >
                   <span>{item.title || item.city} ({item.quantity})</span>
                   <span>${subtotal}</span>
+                      </div>
+                    )
+                  })}
                 </div>
-              )
-            })}
-          </div>
 
-          {/* total */}
+          {/*total*/}
           <p className="text-gray-200 text-2xl font-semibold mt-4">
             Total: <span className="italic text-green-500">${total}</span>
           </p>
 
-          {/* boton finalizar */}
-          <button
-            onClick={handleCheckout}
-            disabled={loading || !validateEmail(userEmail)}
-            className="bg-green-500 text-black font-bold py-3 rounded-lg cursor-pointer transition-transform duration-150 hover:scale-105 active:scale-95 hover:bg-green-600 active:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? "enviando..." : "finalizar compra"}
-          </button>
+          {/* input email */}
+          <input
+            type="email"
+            placeholder="Tu email"
+            value={userEmail}
+            onChange={(e) => setUserEmail(e.target.value)}
+            className="p-2 rounded text-black w-full bg-white"
+            required
+          />
+
+            {/*nombre */}
+            <input
+              type="text"
+              placeholder="Tu nombre"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              className="p-3 rounded text-black w-full bg-white border-2 border-gray-300 focus:border-green-500 focus:outline-none"
+              required
+            />
+
+            {/* empresa*/}
+            <input
+              type="text"
+              placeholder="Empresa"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              className="p-3 rounded text-black w-full bg-white border-2 border-gray-300 focus:border-green-500 focus:outline-none"
+              required
+            />
+
+          {/*boton finalizar*/}
+            <button
+              onClick={handleCheckout}
+              disabled={loading || !validateEmail(userEmail) || !userName || !companyName}
+              className="bg-green-500 text-black font-bold py-3 rounded-lg cursor-pointer transition-transform duration-150 
+                        hover:scale-105 active:scale-95 hover:bg-green-600 active:bg-green-700 
+                        disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "Enviando..." : "Finalizar compra"}
+            </button>
         </div>
       </div>
 
       {/* modal exito*/}
       {success && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
-          <div className="bg-white text-black p-6 rounded-lg flex flex-col items-center gap-4">
-            <h2 className="text-2xl font-bold">¡Compra exitosa!</h2>
-            <p>Tu pedido fue enviado correctamente</p>
+          <div className="bg-white text-black rounded-xl w-full max-w-md p-8 flex flex-col gap-6 shadow-2xl">
+
+            {/*icono de check */}
+            <div className="flex justify-center">
+              <div className="bg-green-600 w-16 h-16 rounded-full flex items-center justify-center">
+                <span className="text-white text-3xl font-bold">✓</span>
+              </div>
+            </div>
+
+            {/*titulo*/}
+            <h2 className="text-3xl font-extrabold text-center text-green-800">¡Compra exitosa!</h2>
+
+            {/*mensaje de verficacion*/}
+            <p className="text-gray-700 text-center text-lg italic">
+              Tu pedido fue <span className="font-bold italic">enviado correctamente</span>. Gracias por confiar en nosotros.
+            </p>
+
+            {/*datos de la orden */}
+            <div className="flex flex-col gap-3 bg-green-100 p-4 rounded-lg shadow-lg">
+              {orderNumber && (
+                <p className="text-gray-800">
+                  <span className="font-semibold">Nº de orden:</span> 
+                  <span className="italic font-bold ml-1">{orderNumber}</span>
+                </p>
+              )}
+              <p className="text-gray-800">
+                <span className="font-semibold">Cliente:</span> 
+                <span className="italic ml-1">{userName}</span>
+              </p>
+              {companyName && (
+                <p className="text-gray-800">
+                  <span className="font-semibold">Empresa:</span> 
+                  <span className="italic font-bold ml-1">{companyName}</span>
+                </p>
+              )}
+            </div>
+
+            {/*boton acwptar */}
             <button
-              onClick={() => { setSuccess(false); clearCart(); setUserEmail("") }}
-              className="bg-green-500 text-black font-bold px-6 py-4 rounded hover:bg-green-600"
+              onClick={() => { 
+                setSuccess(false); 
+                clearCart(); 
+                setUserEmail(""); 
+                setOrderNumber(""); 
+                setUserName(""); 
+                setCompanyName(""); 
+              }}
+              className="mt-4 bg-green-500 text-black font-bold text-lg py-3 rounded-lg hover:bg-green-600 active:bg-green-700 
+                        transition-transform duration-150 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
             >
-              Cerrar
+              Aceptar
             </button>
           </div>
         </div>
+
       )}
 
-      {/* modal error */}
+      {/*modal error*/}
       {error && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
           <div className="bg-white text-black p-6 rounded-lg flex flex-col items-center gap-4">

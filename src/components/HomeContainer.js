@@ -45,7 +45,7 @@ const HomeContainer = () => {
       </section>
 
       <section className="px-5 md:px-20 my-10">
-        <ProductGrid horizontal/>
+        <ProductGrid flatHome />
       </section>
 
     </div>
