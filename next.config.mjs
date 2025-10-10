@@ -8,9 +8,20 @@ const nextConfig = {
         port: '',
         pathname: '/t/p/original/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '4000',
+        pathname: '/img/**',
+      },
     ],
   },
-  // experimental: { turbo: false }  <- eliminado para evitar warning
 };
 
 export default nextConfig;

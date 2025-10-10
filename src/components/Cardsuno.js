@@ -1,22 +1,59 @@
-import Image from "next/image";
+'use client'
+
+import Image from "next/image"
+import { useState, useEffect } from "react"
 
 const Cardsuno = () => {
+  const [fanarts, setFanarts] = useState([])
+  const [startIndex, setStartIndex] = useState(0)
+
+  //trae los fanarts desde la apii
+  useEffect(() => {
+    const fetchFanarts = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/fanart")
+        if (!res.ok) throw new Error("Error al traer los fanarts")
+        const data = await res.json()
+        setFanarts(data.fanarts || [])
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchFanarts()
+  }, [])
+
+  //rotacion de imgs cada 3 segundos
+  useEffect(() => {
+    if (fanarts.length === 0) return
+    const interval = setInterval(() => {
+      setStartIndex(prev => (prev + 2) % fanarts.length)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [fanarts])
+
+  if (fanarts.length === 0) return null
+
+  const visibleFanarts = [
+    fanarts[startIndex],
+    fanarts[(startIndex + 1) % fanarts.length]
+  ]
+
   return (
     <div
       style={{
-        marginTop: "0px",
+        marginTop: "120px",
         marginBottom: "120px",
-        backgroundImage: "url('/background1.png')", 
+        backgroundImage: "url('/background1.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        padding: "60px 0", // para que las img no queden pegadas
+        padding: "60px 0",
       }}
     >
       <h2 className="px-10 text-4xl font-bold mb-10 text-center text-white">
         Fan Art
       </h2>
 
-      {/*contenedor imgs */}
       <div
         style={{
           display: "flex",
@@ -25,49 +62,35 @@ const Cardsuno = () => {
           gap: "40px",
         }}
       >
-        {/*primera img  mas arriba*/}
-        <img
-          src="/flyer1.jpg"
-          alt="Imagen 1"
-          style={{
-            width: "350px",
-            height: "500px",
-            marginBottom: "50px",
-            borderRadius: "15px",
-            boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
-            transition: "transform 0.3s, box-shadow 0.3s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-10px)";
-            e.currentTarget.style.boxShadow = "0 20px 30px rgba(0,0,0,0.4)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.3)";
-          }}
-        />
-        <img
-          src="/flyer2.jpg"
-          alt="Imagen 2"
-          style={{
-            width: "350px",
-            height: "500px",
-            borderRadius: "15px",
-            boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
-            transition: "transform 0.3s, box-shadow 0.3s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-10px)";
-            e.currentTarget.style.boxShadow = "0 20px 30px rgba(0,0,0,0.4)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.3)";
-          }}
-        />
+        {visibleFanarts.map((fanart, idx) => (
+          <div key={fanart._id} style={{ textAlign: "center" }}>
+            <div
+              style={{
+                width: "350px",
+                height: "500px",
+                borderRadius: "15px",
+                overflow: "hidden",
+                boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
+                transition: "transform 0.3s, box-shadow 0.3s",
+                marginBottom: idx % 2 === 0 ? "80px" : "40px",
+                cursor: "pointer"
+              }}
+            >
+              <Image
+                loader={({ src }) => `http://localhost:4000${src}`}
+                src={fanart.image}
+                alt={fanart.artist}
+                width={350}
+                height={500}
+                style={{ objectFit: "cover", borderRadius: "15px" }}
+              />
+            </div>
+            <p className="text-white mt-2">{fanart.artist}</p>
+          </div>
+        ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Cardsuno;
+export default Cardsuno

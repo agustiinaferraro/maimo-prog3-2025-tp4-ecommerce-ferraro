@@ -1,67 +1,78 @@
-'use client'
+'use client';
 
-import Link from "next/link"
-import { useAppContext } from "@/app/context/AppContext"
+import { useAppContext } from "@/app/context/AppContext";
+import Link from "next/link";
+import Image from "next/image";
 
 const ProductCard = ({ product }) => {
-  const { favorites, toggleFavorite, cart, toggleCart } = useAppContext()
-  const isFavorite = favorites.some(fav => fav.id === product.id)
-  const isInCart = cart.some(item => item.id === product.id)
-  const imageUrl = product.poster_path
-    ? `https://image.tmdb.org/t/p/original${product.poster_path}`
-    : `https://image.tmdb.org/t/p/original${product.backdrop_path}`
+  const { favorites, toggleFavorite, cart, toggleCart, incrementCartItem, decrementCartItem } = useAppContext();
+
+  const isFav = favorites.some(fav => fav.id === product.id);
+  const cartItem = cart.find(item => item.id === product.id);
+
+  //precio de la primera variante si existe
+  const price = product.variants && product.variants.length > 0
+    ? `$${product.variants[0].price}`
+    : '$10.00';
 
   return (
-    <Link //link al deralle de la card
-      href={`/product/${product.id}`}
-      className="relative flex-shrink-0 cursor-pointer overflow-hidden rounded-lg block transition-transform duration-300 hover:scale-105"
-    >
-      <div className="relative overflow-hidden rounded-lg">
-        {/*img vertical */}
-        <img
-          src={imageUrl}
-          alt={product.title}
-          className="w-full h-[400px] object-cover rounded-lg"
-        />
-
-        <div className="absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-black/50 to-transparent rounded-t-lg pointer-events-none" />
-
-        <div className="absolute bottom-0 left-0 w-full h-36 bg-gradient-to-t from-black/95 to-transparent rounded-b-lg p-3 flex items-end">
-          <h3 className="text-white text-base md:text-lg font-semibold line-clamp-2">
-            {/*product.title*/}
-          </h3>
+    <div className="relative w-full md:w-[300px] h-[450px] rounded-lg overflow-hidden shadow-lg transition-transform duration-200 transform hover:scale-105 active:scale-95 bg-black/20 backdrop-blur-lg border border-white/20 flex flex-col">
+      
+      {/* link envuelve toda la card excepto botones*/}
+      <Link href={`/product/${product.id}`} className="flex flex-col flex-1">
+        {/*img */}
+        <div className="relative w-full flex-1 bg-white">
+          <Image
+            loader={({ src }) => src}
+            src={product.poster_path || "/img/placeholder.png"}
+            alt={product.title || "Producto"}
+            fill
+            className="object-cover w-full h-full"
+          />
         </div>
+
+        {/*info y precio*/}
+        <div className="p-4 flex flex-col justify-between">
+          <h3 className="text-white font-semibold text-lg line-clamp-2">{product.title}</h3>
+          <p className="text-gray-200 text-sm mt-1">{price}</p>
+        </div>
+      </Link>
+
+      {/*botones y cora fuera del link */}
+      <div className="p-4 flex justify-between items-center">
+        {/* carrito comentado */}
+        {/*
+        {!cartItem ? (
+          <button
+            onClick={() => toggleCart(product)}
+            className="text-white text-2xl w-12 h-12 flex items-center justify-center rounded-full bg-black/60 hover:bg-black transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer"
+          >
+            +
+          </button>
+        ) : (
+          <div className="flex items-center gap-1 bg-white/20 rounded px-2 py-1">
+            <button
+              onClick={() => decrementCartItem(product.id)}
+              className="text-white font-bold px-1"
+            >-</button>
+            <span className="text-white font-semibold">{cartItem.quantity}</span>
+            <button
+              onClick={() => incrementCartItem(product.id)}
+              className="text-white font-bold px-1"
+            >+</button>
+          </div>
+        )} */}
+
+        {/* boton fav */}
+        <button
+          onClick={() => toggleFavorite(product)}
+          className={`text-2xl transition-transform duration-300 hover:scale-125 cursor-pointer ${isFav ? "text-red-500" : "text-gray-300"}`}
+        >
+          {isFav ? "♥" : "♡"}
+        </button>
       </div>
+    </div>
+  );
+};
 
-<button
-  onClick={(e) => {
-    e.preventDefault() //evita que navegue
-    toggleCart(product) // agrega o saca del carrito
-  }}
-  className={`absolute bottom-3 left-3 cursor-pointer text-3xl transition-transform duration-300 hover:scale-125 active:scale-110 ${
-    isInCart ? "text-green-500" : "text-gray-300"
-  }`}
->
-  {/* carrito */}
-  <svg xmlns="http://www.w3.org/2000/svg" fill={isInCart ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.5 7H19m-12 0a1 1 0 100 2 1 1 0 000-2zm10 0a1 1 0 100 2 1 1 0 000-2z" />
-  </svg>
-</button>
-
-
-      <button
-        onClick={(e) => {
-          e.preventDefault() //evita que navegue
-          toggleFavorite(product) //pone o saca de fav
-        }}
-        className={`absolute bottom-3 right-3 cursor-pointer text-3xl transition-transform duration-300 hover:scale-125 hover:text-white active:scale-110 ${
-          isFavorite ? "text-red-500" : "text-gray-300"
-        }`}
-      >
-        {isFavorite ? "♥" : "♡"}
-      </button>
-    </Link>
-  )
-}
-
-export default ProductCard
+export default ProductCard;

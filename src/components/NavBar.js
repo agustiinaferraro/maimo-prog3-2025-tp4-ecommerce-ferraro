@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import Image from "next/image"
 import Link from "next/link"
@@ -6,7 +6,7 @@ import { useState } from "react"
 import { useAppContext } from "@/app/context/AppContext"
 
 const Navbar = () => {
-  const { searchTerm, setSearchTerm, favorites } = useAppContext()
+  const { searchTerm, setSearchTerm, favorites, cart } = useAppContext() // <-- agregamos cart
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -38,6 +38,7 @@ const Navbar = () => {
           <nav 
             className={`w-full md:w-auto ${menuOpen ? 'block absolute top-[72px] left-0 z-10' : 'hidden'} md:flex md:items-center md:gap-6 md:ml-auto md:mt-0 
                         bg-black rounded-b-xl p-4 md:p-0 shadow-lg`}
+
           >
             {/*input de buscar*/}
             <input
@@ -57,6 +58,18 @@ const Navbar = () => {
                     className={`w-6 h-6 flex items-center justify-center rounded-full bg-green-500 text-black font-bold text-sm transition-opacity duration-500 ${favorites.length > 0 ? 'opacity-100' : 'opacity-0'}`}
                   >
                     {favorites.length > 0 ? favorites.length : '0'}
+                  </span>
+                </Link>
+              </li>
+
+              {/*carro*/}
+              <li className="hover:text-white transition-colors duration-200 flex items-center gap-2 py-2 md:py-0 min-w-[118px]">
+                <Link href="/cart" className="flex items-center gap-2 w-full">
+                  Mi Carrito
+                  <span 
+                    className={`w-6 h-6 flex items-center justify-center rounded-full bg-green-500 text-black font-bold text-sm transition-opacity duration-500 ${cart.length > 0 ? 'opacity-100' : 'opacity-0'}`}
+                  >
+                    {cart.length > 0 ? cart.length : '0'}
                   </span>
                 </Link>
               </li>
@@ -87,8 +100,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="pt-[72px]">
-      </div>
+      <div className="pt-[72px]"></div>
     </>
   )
 }
