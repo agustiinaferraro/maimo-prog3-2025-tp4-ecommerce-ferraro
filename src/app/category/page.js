@@ -13,7 +13,7 @@ const CategoryPage = () => {
   const [categoryId, setCategoryId] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // buscar el id de la categoría según el slug
+  //busco el id de la categoria (segun el slug)
   useEffect(() => {
     if (!categories || categories.length === 0) return;
 
@@ -25,12 +25,12 @@ const CategoryPage = () => {
     }
   }, [slug, categories]);
 
-  // traer los productos de esa categoriaa
+  //traigo los productos de esa categoriaa
   useEffect(() => {
     if (!categoryId) return;
 
     setLoading(true);
-    fetchProductsByCategory(categoryId).finally(() => setLoading(false));
+    fetchProductsByCategory(categoryId).finally(() => setLoading(false)); //cuando termina deja de cargar
   }, [categoryId, fetchProductsByCategory]);
 
   if (loading) return <Loading />;

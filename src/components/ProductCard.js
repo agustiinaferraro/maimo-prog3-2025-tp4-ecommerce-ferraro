@@ -21,7 +21,7 @@ const ProductCard = ({ product }) => {
       {/* link envuelve toda la card excepto botones*/}
       <Link href={`/product/${product.id}`} className="flex flex-col flex-1">
         {/*img */}
-        <div className="relative w-full flex-1">
+        <div className="relative w-full flex-1 bg-white">
           <Image
             loader={({ src }) => src}
             src={product.poster_path || "/img/placeholder.png"}
