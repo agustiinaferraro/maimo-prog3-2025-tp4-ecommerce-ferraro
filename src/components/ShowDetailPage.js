@@ -17,7 +17,7 @@ const ShowDetailPage = ({ show }) => {
   //cant por sector
   const [sectorQuantities, setSectorQuantities] = useState({})
 
-  const basePrice = show.price || 50
+  const basePrice = show.basePrice
   const currentQuantity = sectorQuantities[selectedSector.name] || 0
   const totalPrice = ((basePrice * selectedSector.priceModifier) * currentQuantity).toFixed(2) //redondeo a dos decimales
 
@@ -106,7 +106,7 @@ const ShowDetailPage = ({ show }) => {
             <Image
               loader={({ src }) => `http://localhost:4000${src}`}
               src={show.image} 
-              alt={show.city || "Imagen del concierto"}
+              alt={show.city}
               fill
               style={{ objectFit: "cover" }}
               className="relative w-full h-full rounded-lg"
@@ -153,7 +153,7 @@ const ShowDetailPage = ({ show }) => {
       </div>
 
       {/*total*/}
-      <p className="text-white font-semibold text-lg mt-2">Total: ${totalPrice}</p>
+      <p className="text-white font-semibold text-lg mt-2">Precio del sector: ${(basePrice * selectedSector.priceModifier).toFixed(2)}</p>
 
       {/*cant y boton */}
       {currentQuantity > 0 ? (
