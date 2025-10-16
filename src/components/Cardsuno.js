@@ -12,7 +12,7 @@ const Cardsuno = () => {
     const fetchFanarts = async () => {
       try {
         const res = await fetch("http://localhost:4000/fanart")
-        if (!res.ok) throw new Error("Error al traer los fanarts")
+        if (!res.ok) throw new Error("Error al traer los fanarts") //muestra un error y para el codigo
         const data = await res.json()
         setFanarts(data.fanarts || [])
       } catch (err) {

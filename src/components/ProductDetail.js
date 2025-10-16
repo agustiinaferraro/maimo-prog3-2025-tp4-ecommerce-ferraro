@@ -111,7 +111,9 @@ export default function ProductDetail({ id }) {
                 <select
                   value={selectedVariant?.color}
                   onChange={e => {
-                    const variant = productDetail.variants.find(v => v.color === e.target.value);
+                    const variant = productDetail.variants.find(v => v.color === e.target.value); //find busca el primer elemento 
+                                                                                //del array que cumpla la condicin y lo devuelve
+
                     setSelectedVariant(variant);
                     setSelectedSize(variant?.sizes?.[0] || '');
                   }}

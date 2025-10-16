@@ -13,21 +13,22 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!params?.id) return;
+    if (!params?.id) return; //chequea si esxste el id
 
     const id = params.id;
     setLoading(true);
 
     // prumero busca en productos del contexto
-    const found = products.find(p => String(p.id) === String(id));
+    const found = products.find(p => String(p.id) === String(id)); //find busca el primer producto que cumpla la condicion 
+    //string para convertir los ids a texto y compararlos
 
     if (found) {
       setProduct(found);
       setLoading(false);
     } else {
       // Si no esta hace fetch desde la apu
-      fetchProductById(id).then(p => {
-        if (p) setProduct(p);
+      fetchProductById(id).then(p => { //then toma la respuesta de fetch para usar los datos
+        if (p) setProduct(p); //si p tiene datos los guarda
         setLoading(false);
       });
     }

@@ -17,9 +17,9 @@ const Hero = () => {
         if (!res.ok) throw new Error("Error al traer conciertos");
         const data = await res.json();
         const processed = data.concerts.map(item => ({
-          ...item,
+          ...item, //... copuan las propiedades del objeto item en un nuevo objeto
           id: item._id,
-          date: new Date(item.date).getTime(),
+          date: new Date(item.date).getTime(), //new date convierte la fecha en milisegundos para poder ordenarla o compararla
         }));
         setConcerts(processed);
       } catch (err) {
@@ -86,7 +86,8 @@ const Hero = () => {
         <h1 className="text-3xl md:text-5xl font-bold mb-2">{currentConcert.venue}</h1>
         <h2 className="text-xl md:text-2xl mb-2">{currentConcert.city}</h2>
         <p className="text-gray-300">
-          {new Date(currentConcert.date).toLocaleDateString("es-AR", {
+          {/*muestra la fecha del concierto facil de leer */}
+          {new Date(currentConcert.date).toLocaleDateString("es-AR", { 
             day: "2-digit",
             month: "long",
             year: "numeric",

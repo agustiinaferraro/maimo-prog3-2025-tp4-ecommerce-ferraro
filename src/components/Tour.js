@@ -16,14 +16,14 @@ const Tour = ({ horizontal = false }) => {
     const fetchTourDates = async () => {
       try {
         const res = await fetch("http://localhost:4000/tours");
-        if (!res.ok) throw new Error("Error al traer los datos");
+        if (!res.ok) throw new Error("Error al traer los datos"); //con trow veo si hay un error y frena el codigo si esta mal
         const data = await res.json();
         const concerts = data.concerts || [];
 
         const processed = concerts.map(item => ({
           ...item,
           id: item._id,
-          date: new Date(item.date).getTime(),
+          date: new Date(item.date).getTime(), //convierte la fecha en num para ordenarla
         }));
 
         setTourDates(processed);
@@ -55,7 +55,8 @@ const Tour = ({ horizontal = false }) => {
             : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         }`}>
           {tourDates.map(show => {
-            const isFav = favorites.some(fav => fav.id === show.id && fav.type === "tour");
+            const isFav = favorites.some(fav => fav.id === show.id && fav.type === "tour"); //some se fija si un elemento 
+                                                                        //cumple cno la condicion y devuelve true o false
 
             return (
               <div 
@@ -78,7 +79,7 @@ const Tour = ({ horizontal = false }) => {
                   <h3 className="text-xl font-semibold text-white">{show.city}</h3>
                   <p className="text-gray-300">{show.venue}</p>
                   <p className="text-gray-200 font-medium">
-                    {new Date(show.date).toLocaleDateString("es-AR", {
+                    {new Date(show.date).toLocaleDateString("es-AR", { //convierte la fecha a un formato legible ej 11/12/2025
                       day: "2-digit",
                       month: "long",
                       year: "numeric"

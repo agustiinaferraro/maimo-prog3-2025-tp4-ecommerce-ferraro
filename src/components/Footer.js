@@ -28,7 +28,7 @@ const Footer = () => {
                 alt={red.nombre}
                 className="w-12 h-12 mb-2 object-contain"
               />
-              <span className="text-white text-sm font-medium">{red.nombre}</span>
+              <span className="text-white text-sm font-medium">{red.nombre}</span> {/*nombre de cada app*/}
             </a>
           ))}
         </div>

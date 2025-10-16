@@ -19,7 +19,7 @@ const ShowDetailPage = ({ show }) => {
 
   const basePrice = show.price || 50
   const currentQuantity = sectorQuantities[selectedSector.name] || 0
-  const totalPrice = ((basePrice * selectedSector.priceModifier) * currentQuantity).toFixed(2)
+  const totalPrice = ((basePrice * selectedSector.priceModifier) * currentQuantity).toFixed(2) //redondeo a dos decimales
 
   //agregar al carritooo
   const handleAddToCart = () => {

@@ -20,7 +20,7 @@ const FavoritesGrid = () => {
     <section className="px-5 md:px-20 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
       {favorites.map(fav => {
         if (fav.type === "tour") {
-          const isFav = favorites.some(f => f.id === fav.id);
+          const isFav = favorites.some(f => f.id === fav.id); //revisa con some si algun favorito tiene el mismo id que el fav
           return (
             <div
               key={fav.id}
@@ -41,8 +41,9 @@ const FavoritesGrid = () => {
                 <h3 className="text-xl font-semibold text-white">{fav.title}</h3>
                 <p className="text-gray-300">{fav.overview}</p>
                 <p className="text-gray-200 font-medium">
+                  {/*converte precio arg */}
                   {fav.variants?.[0]?.price != null
-                    ? `$${fav.variants[0].price.toLocaleString('es-AR')}`
+                    ? `$${fav.variants[0].price.toLocaleString('es-AR')}` 
                     : "$0"}
                 </p>
               </div>

@@ -13,7 +13,8 @@ const Page = () => {
   const selectedCategoryName =
     selectedCategory === "all"
       ? "Toda la Merch"
-      : categories.find(c => c._id === selectedCategory)?.name || "Merch";
+      : categories.find(c => c._id === selectedCategory)?.name || "Merch"; //find busca la categoria que coincida 
+                                                                            //devuelve el nombre o merch
 
   return (
     <div className="mt-20 relative min-h-screen">
