@@ -53,7 +53,7 @@ export default function ProductDetail({ id }) {
   return (
     <div className="relative min-h-screen w-full px-5 py-10 flex justify-center">
       {productDetail.backdrop_path && (
-        <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 -z-10 bg-white">
           <Image
             src={productDetail.backdrop_path}
             alt={`Fondo de ${productDetail.title || 'Sin título'}`}
@@ -63,18 +63,18 @@ export default function ProductDetail({ id }) {
         </div>
       )}
 
-      <div className="w-[60%] max-w-6xl grid md:grid-cols-2 gap-10 items-center">
+      <div className="w-[60%] max-w-6xl grid md:grid-cols-2 gap-3 items-center">
         {/*img*/}
         <div className="relative w-full flex justify-center">
-          <div className="relative w-full max-w-[400px] h-[500px] md:h-[650px] rounded-lg overflow-hidden transition-transform duration-300 hover:scale-105">
+          <div className="relative w-full max-w-[400px] h-[200px] md:h-[450px] bg-white rounded-lg overflow-hidden transition-transform duration-300 hover:scale-105">
             <Image
               src={selectedVariant?.image || productDetail.poster_path}
               alt={`Imagen de ${productDetail.title || 'Sin título'}`}
               fill
               className="object-cover rounded-lg"
             />
-            <div className="absolute top-0 left-0 w-full h-1/4 bg-gradient-to-b from-black/70 to-transparent rounded-t-lg pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-full h-1/4 bg-gradient-to-t from-black/90 to-transparent rounded-b-lg pointer-events-none" />
+            <div className="absolute top-0 left-0 w-full h-1/4  rounded-t-lg pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-full h-1/4  rounded-b-lg pointer-events-none" />
           </div>
         </div>
 
@@ -95,16 +95,19 @@ export default function ProductDetail({ id }) {
             <div className="flex gap-4 mt-4 flex-wrap">
               <div>
                 <label className="text-white font-semibold mr-2">Talle:</label>
-                <select
-                  value={selectedSize}
-                  onChange={e => setSelectedSize(e.target.value)}
-                  className="rounded px-2 py-1 bg-white text-black cursor-pointer"
-                  disabled={!selectedVariant?.sizes?.length}
-                >
-                  {selectedVariant?.sizes?.map((size, i) => (
-                    <option key={`${productDetail.id}-size-${i}`} value={size}>{size}</option>
-                  ))}
-                </select>
+                {selectedVariant?.sizes?.length > 0 ? (
+                  <select
+                    value={selectedSize}
+                    onChange={e => setSelectedSize(e.target.value)}
+                    className="rounded px-2 py-1 bg-white text-black cursor-pointer"
+                  >
+                    {selectedVariant.sizes.map((size, i) => (
+                      <option key={`${productDetail.id}-size-${i}`} value={size}>{size}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <span className="text-gray-400 italic">No disponible</span>
+                )}
               </div>
               <div>
                 <label className="text-white font-semibold mr-2">Color:</label>
@@ -160,12 +163,12 @@ export default function ProductDetail({ id }) {
               <>
                 <button
                   onClick={e => { e.preventDefault(); decrementCartItem(cartItem); }}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 cursor-pointer"
+                  className="bg-red-500 text-white px-4 py-2 rounded transform transition-transform duration-300 hover:scale-125 cursor-pointer"
                 >-</button>
                 <span className="text-white font-semibold">{cartItem.quantity}</span>
                 <button
                   onClick={e => { e.preventDefault(); incrementCartItem(cartItem); }}
-                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 cursor-pointer"
+                  className="bg-green-500 text-white px-4 py-2 rounded transform transition-transform duration-300 hover:scale-125 cursor-pointer"
                 >+</button>
               </>
             )}
@@ -189,7 +192,7 @@ export default function ProductDetail({ id }) {
                   price: selectedVariant?.price || 0
                 });
               }}
-              className={`ml-4 text-2xl cursor-pointer ${isFavorite ? 'text-red-500' : 'text-white'}`}
+              className={`ml-4 text-2xl transition-transform duration-300 hover:scale-125 cursor-pointer ${isFavorite ? 'text-red-500' : 'text-white'}`}
             >
               {isFavorite ? '♥' : '♡'}
             </button>
