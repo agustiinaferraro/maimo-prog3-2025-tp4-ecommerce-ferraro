@@ -74,7 +74,7 @@ const Cardsdos = () => {
           const show = recitales[i]
           return (
             <Link
-              key={`${show.id}-${idx}`}
+              key={`${show.id}-${idx}`} //pone un nombre a c/tarjeta
               href={show.ticketUrl}
               className="relative w-[350px] h-[500px] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105 cursor-pointer"
             >

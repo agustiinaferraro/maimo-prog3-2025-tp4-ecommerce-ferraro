@@ -10,7 +10,8 @@ const CarouselDiscos = () => {
 
   // filtra solo productos con fondo categoria discos
   const discos = (products || []).filter(
-    p => p?.backdrop_path && p?.categories?.some(cat => cat.slug === "discos")
+    //filtra los que tengan backdrop=y que alguna categoria sea discos usando some
+    p => p?.backdrop_path && p?.categories?.some(cat => cat.slug === "discos") 
   );
 
   if (discos.length === 0) return <Loading />;
@@ -25,8 +26,8 @@ const CarouselDiscos = () => {
       </h2>
       <div className="flex gap-6 whitespace-nowrap animate-carousel">
         {loopDiscos.map((disco, index) => {
-          const isFav = favorites.some(fav => fav.id === disco.id);
-          const price = disco.variants && disco.variants.length > 0
+          const isFav = favorites.some(fav => fav.id === disco.id); {/*some para ver si algun fav tiene el mismo id que el disco*/}
+          const price = disco.variants && disco.variants.length > 0 
             ? `$${disco.variants[0].price}`
             : '$10.00';
 

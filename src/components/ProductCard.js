@@ -7,8 +7,8 @@ import Image from "next/image";
 const ProductCard = ({ product }) => {
   const { favorites, toggleFavorite, cart, toggleCart, incrementCartItem, decrementCartItem } = useAppContext();
 
-  const isFav = favorites.some(fav => fav.id === product.id);
-  const cartItem = cart.find(item => item.id === product.id);
+  const isFav = favorites.some(fav => fav.id === product.id); //revisa con some si algun fav tiene el mismo id que el produc
+  const cartItem = cart.find(item => item.id === product.id); //busca con find el primer item del carrito que tenga el mismo id que el prod
 
   //precio de la primera variante si existe
   const price = product.variants && product.variants.length > 0

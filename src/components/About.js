@@ -8,7 +8,7 @@ import ProductGrid from "@/components/ProductGrid"
 const About = () => {
   const { searchTerm } = useAppContext();
 
-  if (searchTerm) {
+  if (searchTerm) { // cuando busca muestra el productgrid
     return <ProductGrid />
   }
 

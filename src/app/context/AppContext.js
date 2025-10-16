@@ -26,7 +26,7 @@ export const AppProvider = ({ children }) => {
 //state para conteo total por producto
 const [cardSet, setCardSet] = useState([]); 
 
-//agregar al cardSet
+//agregar al cardSet o aumenta la cntidad si ya estaba
 const addToCardSet = (product, quantity = 1) => {
   setCardSet(prev => {
     // find busca si ya existe el producto (solo por id)
@@ -45,6 +45,7 @@ const addToCardSet = (product, quantity = 1) => {
 };
 
   // carrito
+//agrega el producto al carrito o aumenta su cantidad si ya existe
 const toggleCart = (product, quantity = 1) => {
   setCart(prev => {
     //busca item idntico (id + color + size + logo)
@@ -72,6 +73,7 @@ const toggleCart = (product, quantity = 1) => {
   });
 };
 
+//suma 1 a la cantidad del producto si ya esta en el carrito
 const incrementCartItem = (product) => {
   setCart(prev => //prev es el carrito 
     prev.map(item => //item es cada producto del carrito
@@ -85,6 +87,8 @@ const incrementCartItem = (product) => {
   );
 };
 
+
+//resta 1 a la cantidad del producto y lo borra si queda en 0
 const decrementCartItem = (product) => {
   setCart(prev =>
     prev
@@ -100,6 +104,8 @@ const decrementCartItem = (product) => {
   );
 };
 
+
+//saca del carrito el producto que coincide con id color talle y logo
 const removeFromCart = (product) => {
   setCart(prev =>
     prev.filter(

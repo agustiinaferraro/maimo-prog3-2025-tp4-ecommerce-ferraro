@@ -18,7 +18,7 @@ export default function Page() {
     const fetchShow = async () => {
       try {
         const res = await fetch(`http://localhost:4000/tours/${id}`)
-        if (!res.ok) throw new Error("No se pudo cargar el show")
+        if (!res.ok) throw new Error("No se pudo cargar el show") //muesrra error y para el codigo
         const data = await res.json()
 
         const concert = data.concert

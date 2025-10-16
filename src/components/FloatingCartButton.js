@@ -8,9 +8,10 @@ const FloatingCartButton = () => {
   const { cart } = useAppContext()
   const pathname = usePathname()
 
-  if (cart.length === 0 || pathname === '/cart') return null
-
+  if (cart.length === 0 || pathname === '/cart') return null //si el carrito esta vacio o estoy en la pagina de carrito no muestro el boton
+  {/*reduce suma los precios de todos los items del carrito */}
   const total = cart.reduce((acc, item) => {
+    {/*number convierte el precio a num para poder sumarlo aunque venga como texto o no exista */}
     const price = Number(item.price || item.variant?.price || item.variants?.[0]?.price || 0)
     return acc + price * (item.quantity || 0)
   }, 0)
@@ -37,7 +38,7 @@ const FloatingCartButton = () => {
         </svg>
         Ver Carrito{' '}
         <span className="italic text-green-700">
-          {total.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })}
+          {total.toLocaleString('es-AR', { style: 'currency', currency: 'ARS' })} {/*precio en formato arg*/}
         </span>
       </button>
     </Link>

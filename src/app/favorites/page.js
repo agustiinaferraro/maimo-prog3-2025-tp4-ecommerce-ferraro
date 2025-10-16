@@ -8,7 +8,7 @@ import Link from "next/link"
 export default function FavoritesPage() {
   const { favorites, searchTerm } = useAppContext()
 
-  // si hay busquesa muestra solo la grilla
+  // si hay busquesa muestra la grilla
   if (searchTerm) {
     return <ProductGrid />
   }
