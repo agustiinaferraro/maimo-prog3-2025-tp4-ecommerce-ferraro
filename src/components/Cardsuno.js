@@ -2,26 +2,16 @@
 
 import Image from "next/image"
 import { useState, useEffect } from "react"
+import { useAppContext } from "@/app/context/AppContext";
 
 const Cardsuno = () => {
-  const [fanarts, setFanarts] = useState([])
+  const { fanarts, fetchFanarts } = useAppContext(); //traigo del context
   const [startIndex, setStartIndex] = useState(0)
 
   //trae los fanarts desde la apii
   useEffect(() => {
-    const fetchFanarts = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/fanart")
-        if (!res.ok) throw new Error("Error al traer los fanarts") //muestra un error y para el codigo
-        const data = await res.json()
-        setFanarts(data.fanarts || [])
-      } catch (err) {
-        console.error(err)
-      }
-    }
-
-    fetchFanarts()
-  }, [])
+    fetchFanarts();
+  }, [fetchFanarts]);
 
   //rotacion de imgs cada 3 segundos
   useEffect(() => {
@@ -93,4 +83,4 @@ const Cardsuno = () => {
   )
 }
 
-export default Cardsuno
+export default Cardsuno;
