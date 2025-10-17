@@ -16,7 +16,7 @@ export const AppProvider = ({ children }) => {
   const [fanarts, setFanarts] = useState([]);  
 
   const checkout = async ({ cart, userEmail, userName, companyName }) => {
-    const res = await fetch("http://localhost:4000/checkout", {
+    const res = await fetch(`${API_URL}/checkout`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cart, userEmail, userName, companyName }),
@@ -27,7 +27,7 @@ export const AppProvider = ({ children }) => {
 
 const fetchFanarts = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:4000/fanart");
+      const res = await fetch(`${API_URL}/fanart`);
       if (!res.ok) throw new Error("Error al traer los fanarts");
       const data = await res.json();
       setFanarts(data.fanarts || []);
@@ -39,7 +39,7 @@ const fetchFanarts = useCallback(async () => {
 
 const fetchConcerts = useCallback(async () => {
   try {
-    const res = await fetch("http://localhost:4000/tours");
+    const res = await fetch(`${API_URL}/tours`);
     const data = await res.json();
     const processed = (data.concerts || []).map(item => ({
       ...item, //copia todas las propiedades 
