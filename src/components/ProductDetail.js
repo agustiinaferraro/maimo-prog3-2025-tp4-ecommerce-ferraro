@@ -27,7 +27,7 @@ export default function ProductDetail({ id }) {
   useEffect(() => {
     if (!products || products.length === 0) return;
 
-    const product = products.find(p => String(p.id) === String(id));
+    const product = products.find(p => String(p.id) === String(id)); //find busca el producto con el id que coincida en el array de products y los convierte a string
     if (product) {
       setProductDetail(product);
       setSelectedVariant(product.variants?.[0] || null);

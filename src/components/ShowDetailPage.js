@@ -8,11 +8,9 @@ const ShowDetailPage = ({ show }) => {
   const { toggleCart, cart } = useAppContext()
 
   //nombre de sector por defecto
-  const defaultSectorName = show.sectors?.[0]?.name || "Campo"
+  const defaultSectorName = show.sectors[0].name
 
-  const [selectedSector, setSelectedSector] = useState(
-    show.sectors ? show.sectors[0] : { name: "Campo", priceModifier: 1 }
-  )
+  const [selectedSector, setSelectedSector] = useState(show.sectors[0])
 
   //cant por sector
   const [sectorQuantities, setSectorQuantities] = useState({})

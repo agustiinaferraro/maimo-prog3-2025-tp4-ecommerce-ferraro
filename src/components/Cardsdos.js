@@ -3,47 +3,29 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import { useAppContext } from "@/app/context/AppContext";
 
 const Cardsdos = () => {
-  const [recitales, setRecitales] = useState([])
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const { concerts, fetchConcerts } = useAppContext(); //traigo datos del context
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  //trae las fechas de los conciertos desde el backend
+  //llamo fetch desde el context
   useEffect(() => {
-    const fetchConcerts = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/tours")
-        const data = await res.json()
-        const concerts = data.concerts || []
+    fetchConcerts();
+  }, [fetchConcerts]);
 
-        // Procesar datos para solo lo necesario
-        const processed = concerts.map(item => ({
-          id: item._id,
-          image: item.image,
-          city: item.city,
-          ticketUrl: item.ticketUrl
-        }))
-        setRecitales(processed)
-      } catch (err) {
-        console.error(err)
-      }
-    }
-
-    fetchConcerts()
-  }, [])
-
-  //rota imgs cada 4 segundos
+  //rotacion de ims cada 4 segundos
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 2) % recitales.length)
-    }, 4000)
-    return () => clearInterval(interval)
-  }, [recitales.length])
+      setCurrentIndex(prev => (prev + 2) % concerts.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [concerts.length]);
 
-  if (recitales.length === 0) return null
+  if (concerts.length === 0) return null;
 
-  const firstIndex = currentIndex
-  const secondIndex = (currentIndex + 1) % recitales.length
+  const firstIndex = currentIndex;
+  const secondIndex = (currentIndex + 1) % concerts.length;
 
   return (
     <div
@@ -71,11 +53,11 @@ const Cardsdos = () => {
         }}
       >
         {[firstIndex, secondIndex].map((i, idx) => {
-          const show = recitales[i]
+          const show = concerts[i];
           return (
             <Link
-              key={`${show.id}-${idx}`} //pone un nombre a c/tarjeta
-              href={show.ticketUrl}
+              key={`${show.id}-${idx}`}
+              href="/tour"
               className="relative w-[350px] h-[500px] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105 cursor-pointer"
             >
               <Image
@@ -103,4 +85,4 @@ const Cardsdos = () => {
   )
 }
 
-export default Cardsdos
+export default Cardsdos;

@@ -1,45 +1,14 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { useAppContext } from "@/app/context/AppContext";
-import Image from "next/image";
-import Link from "next/link";
-import Loading from "./Loading";
+import { useAppContext } from "@/app/context/AppContext"
+import Image from "next/image"
+import Link from "next/link"
+import Loading from "./Loading"
 
 const Tour = ({ horizontal = false }) => {
-  const { favorites, toggleFavorite } = useAppContext();
-  const [tourDates, setTourDates] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { favorites, toggleFavorite, concerts } = useAppContext(); // tomo conciertos del context
 
-  useEffect(() => {
-    const fetchTourDates = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/tours");
-        if (!res.ok) throw new Error("Error al traer los datos"); //con trow veo si hay un error y frena el codigo si esta mal
-        const data = await res.json();
-        const concerts = data.concerts || [];
-
-        const processed = concerts.map(item => ({
-          ...item,
-          id: item._id,
-          date: new Date(item.date).getTime(), //convierte la fecha en num para ordenarla
-        }));
-
-        setTourDates(processed);
-      } catch (err) {
-        console.error(err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTourDates();
-  }, []);
-
-  if (loading) return <Loading />;
-  if (error) return <div className="text-red-500 p-4">{error}</div>;
+  if (!concerts || concerts.length === 0) return <Loading />; //si no hay datos muestro loading
 
   return (
     <div className="relative pt-20 pb-6 px-12">
@@ -54,7 +23,7 @@ const Tour = ({ horizontal = false }) => {
             ? "flex overflow-x-auto space-x-6 scrollbar-hide"
             : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         }`}>
-          {tourDates.map(show => {
+          {concerts.map(show => {
             const isFav = favorites.some(fav => fav.id === show.id && fav.type === "tour"); //some se fija si un elemento 
                                                                         //cumple cno la condicion y devuelve true o false
 
