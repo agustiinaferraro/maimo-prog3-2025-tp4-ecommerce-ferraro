@@ -282,6 +282,7 @@ const removeFromCart = (product) => {
   return (
     <AppContext.Provider
       value={{
+        API_URL,   
         checkout,
         fanarts,
         fetchFanarts,

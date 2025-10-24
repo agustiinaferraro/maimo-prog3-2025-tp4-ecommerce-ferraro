@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { useAppContext } from "@/app/context/AppContext";
 
 const Cardsuno = () => {
-  const { fanarts, fetchFanarts } = useAppContext(); //traigo del context
+  const { fanarts, fetchFanarts, API_URL } = useAppContext(); //traigo del context
   const [startIndex, setStartIndex] = useState(0)
 
   //trae los fanarts desde la apii
@@ -67,7 +67,7 @@ const Cardsuno = () => {
               }}
             >
               <Image
-                loader={({ src }) => `http://localhost:4000${src}`}
+                loader={({ src }) => `${API_URL}${src}`} 
                 src={fanart.image}
                 alt={fanart.artist}
                 width={350}

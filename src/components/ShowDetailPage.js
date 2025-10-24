@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 
 const ShowDetailPage = ({ show }) => {
-  const { toggleCart, cart } = useAppContext()
+  const { toggleCart, cart, API_URL } = useAppContext()
 
   //nombre de sector por defecto
   const defaultSectorName = show.sectors[0].name
@@ -102,7 +102,7 @@ const ShowDetailPage = ({ show }) => {
               style={{ backgroundImage: `url(${show.image.startsWith('/') ? show.image : `/${show.image}`})` }}
             />
             <Image
-              loader={({ src }) => `http://localhost:4000${src}`}
+              loader={({ src }) => `${API_URL}${src}`} 
               src={show.image} 
               alt={show.city}
               fill
