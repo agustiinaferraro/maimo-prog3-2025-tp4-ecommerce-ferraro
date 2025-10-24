@@ -6,7 +6,7 @@ import Link from "next/link"
 import Loading from "./Loading"
 
 const Tour = ({ horizontal = false }) => {
-  const { favorites, toggleFavorite, concerts } = useAppContext(); // tomo conciertos del context
+  const { favorites, toggleFavorite, concerts, API_URL } = useAppContext(); // tomo conciertos del context
 
   if (!concerts || concerts.length === 0) return <Loading />; //si no hay datos muestro loading
 
@@ -35,7 +35,7 @@ const Tour = ({ horizontal = false }) => {
                 {/*img con gradiente */}
                 <div className="relative w-full h-full">
                   <Image
-                    loader={({ src }) => `http://localhost:4000${src}`}
+                    loader={({ src }) => `${API_URL}${src}`} 
                     src={show.image}
                     alt={show.city}
                     fill

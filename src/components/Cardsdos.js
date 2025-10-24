@@ -6,7 +6,7 @@ import { useState, useEffect } from "react"
 import { useAppContext } from "@/app/context/AppContext";
 
 const Cardsdos = () => {
-  const { concerts, fetchConcerts } = useAppContext(); //traigo datos del context
+  const { concerts, fetchConcerts, API_URL } = useAppContext(); //traigo datos del context
   const [currentIndex, setCurrentIndex] = useState(0);
 
   //llamo fetch desde el context
@@ -61,7 +61,7 @@ const Cardsdos = () => {
               className="relative w-[350px] h-[500px] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105 cursor-pointer"
             >
               <Image
-                loader={({ src }) => `http://localhost:4000${src}`}
+                loader={({ src }) => `${API_URL}${src}`} 
                 src={show.image}
                 alt={show.city}
                 fill
