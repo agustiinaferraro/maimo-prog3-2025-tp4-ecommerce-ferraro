@@ -3,34 +3,23 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Loading from "./Loading";
+import { useAppContext } from "@/app/context/AppContext";
 
 const Hero = () => {
-  const [concerts, setConcerts] = useState([]);
+  //obtenemos los conciertos desde el context
+  const { concerts } = useAppContext();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [loading, setLoading] = useState(true);
 
+  //cuando el context ya tenga conciertos cargados, se quita el loading
   useEffect(() => {
-    const fetchConcerts = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/tours");
-        if (!res.ok) throw new Error("Error al traer conciertos");
-        const data = await res.json();
-        const processed = data.concerts.map(item => ({
-          ...item,
-          id: item._id,
-          date: new Date(item.date).getTime(),
-        }));
-        setConcerts(processed);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchConcerts();
-  }, []);
+    if (concerts && concerts.length > 0) {
+      setLoading(false);
+    }
+  }, [concerts]);
 
+  //logica de rotacion de conciertos
   useEffect(() => {
     if (!concerts || concerts.length === 0) return;
     const interval = setInterval(() => {
@@ -86,7 +75,8 @@ const Hero = () => {
         <h1 className="text-3xl md:text-5xl font-bold mb-2">{currentConcert.venue}</h1>
         <h2 className="text-xl md:text-2xl mb-2">{currentConcert.city}</h2>
         <p className="text-gray-300">
-          {new Date(currentConcert.date).toLocaleDateString("es-AR", {
+          {/*muestra la fecha del concierto facil de leer */}
+          {new Date(currentConcert.date).toLocaleDateString("es-AR", { 
             day: "2-digit",
             month: "long",
             year: "numeric",

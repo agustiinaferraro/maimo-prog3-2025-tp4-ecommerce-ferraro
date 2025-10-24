@@ -5,21 +5,19 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 
 const ShowDetailPage = ({ show }) => {
-  const { toggleCart, cart } = useAppContext()
+  const { toggleCart, cart, API_URL } = useAppContext()
 
   //nombre de sector por defecto
-  const defaultSectorName = show.sectors?.[0]?.name || "Campo"
+  const defaultSectorName = show.sectors[0].name
 
-  const [selectedSector, setSelectedSector] = useState(
-    show.sectors ? show.sectors[0] : { name: "Campo", priceModifier: 1 }
-  )
+  const [selectedSector, setSelectedSector] = useState(show.sectors[0])
 
   //cant por sector
   const [sectorQuantities, setSectorQuantities] = useState({})
 
-  const basePrice = show.price || 50
+  const basePrice = show.basePrice
   const currentQuantity = sectorQuantities[selectedSector.name] || 0
-  const totalPrice = ((basePrice * selectedSector.priceModifier) * currentQuantity).toFixed(2)
+  const totalPrice = ((basePrice * selectedSector.priceModifier) * currentQuantity).toFixed(2) //redondeo a dos decimales
 
   //agregar al carritooo
   const handleAddToCart = () => {
@@ -104,9 +102,9 @@ const ShowDetailPage = ({ show }) => {
               style={{ backgroundImage: `url(${show.image.startsWith('/') ? show.image : `/${show.image}`})` }}
             />
             <Image
-              loader={({ src }) => `http://localhost:4000${src}`}
+              loader={({ src }) => `${API_URL}${src}`} 
               src={show.image} 
-              alt={show.city || "Imagen del concierto"}
+              alt={show.city}
               fill
               style={{ objectFit: "cover" }}
               className="relative w-full h-full rounded-lg"
@@ -153,7 +151,7 @@ const ShowDetailPage = ({ show }) => {
       </div>
 
       {/*total*/}
-      <p className="text-white font-semibold text-lg mt-2">Total: ${totalPrice}</p>
+      <p className="text-white font-semibold text-lg mt-2">Precio del sector: ${(basePrice * selectedSector.priceModifier).toFixed(2)}</p>
 
       {/*cant y boton */}
       {currentQuantity > 0 ? (

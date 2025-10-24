@@ -64,7 +64,8 @@ const ProductGrid = ({ flatHome = false, selectedCategory: externalCategory = nu
           </>
         ) : (
           // categorias
-          Object.entries(productsByCategory).map(([categoryName, products]) => (
+          Object.entries(productsByCategory).map(([categoryName, products]) => ( //ibjet.entries convierte el objeto en un array 
+                                                                          // para poder recorrer cada categoria con sus productos
             <div key={`category-${categoryName}`} className="mb-12">
               {selectedCategory === "all" && (
                 <h3 className="text-2xl font-semibold mb-6 text-white">{categoryName}</h3>

@@ -18,22 +18,12 @@ export default function Page() {
     const fetchShow = async () => {
       try {
         const res = await fetch(`http://localhost:4000/tours/${id}`)
-        if (!res.ok) throw new Error("No se pudo cargar el show")
+        if (!res.ok) throw new Error("No se pudo cargar el show") //muesrra error y para el codigo
         const data = await res.json()
-
         const concert = data.concert
-
-        // si no hay sectors agrega los default
-        if (!concert.sectors || concert.sectors.length === 0) {
-          concert.sectors = [
-            { name: "Campo", priceModifier: 1 },
-            { name: "Platea", priceModifier: 1.2 },
-            { name: "VIP", priceModifier: 1.5 }
-          ]
-        }
-
-        //si no hay precio base, asigna 50
-        concert.price = concert.price || 50
+        
+        //precciiooo
+        concert.price = concert.price
 
         setShow(concert)
       } catch (err) {

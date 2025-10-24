@@ -27,7 +27,11 @@ const TourFavoriteCard = ({ tour }) => {
         <h3 className="text-xl font-semibold text-white">{tour.title}</h3>
         <p className="text-gray-300">{tour.overview}</p>
         <p className="text-gray-200 font-medium">
-          {tour.variants?.[0]?.price ? `$${tour.variants[0].price.toLocaleString('es-AR')}` : "$0"}
+          {tour.variants?.[0]?.price ? `$${tour.variants[0].price.toLocaleString('es-AR')}` : "$0"} {/*tour.variante price etc 
+                                                                            muestra el precio del primer variante 
+                                                                            o `$0` si no existe, con formato argentino 
+                                                                            (aunue ya esta desed el back)
+                                                                              */}
         </p>
       </div>
 

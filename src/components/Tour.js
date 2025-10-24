@@ -1,45 +1,14 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { useAppContext } from "@/app/context/AppContext";
-import Image from "next/image";
-import Link from "next/link";
-import Loading from "./Loading";
+import { useAppContext } from "@/app/context/AppContext"
+import Image from "next/image"
+import Link from "next/link"
+import Loading from "./Loading"
 
 const Tour = ({ horizontal = false }) => {
-  const { favorites, toggleFavorite } = useAppContext();
-  const [tourDates, setTourDates] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { favorites, toggleFavorite, concerts, API_URL } = useAppContext(); // tomo conciertos del context
 
-  useEffect(() => {
-    const fetchTourDates = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/tours");
-        if (!res.ok) throw new Error("Error al traer los datos");
-        const data = await res.json();
-        const concerts = data.concerts || [];
-
-        const processed = concerts.map(item => ({
-          ...item,
-          id: item._id,
-          date: new Date(item.date).getTime(),
-        }));
-
-        setTourDates(processed);
-      } catch (err) {
-        console.error(err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTourDates();
-  }, []);
-
-  if (loading) return <Loading />;
-  if (error) return <div className="text-red-500 p-4">{error}</div>;
+  if (!concerts || concerts.length === 0) return <Loading />; //si no hay datos muestro loading
 
   return (
     <div className="relative pt-20 pb-6 px-12">
@@ -54,8 +23,9 @@ const Tour = ({ horizontal = false }) => {
             ? "flex overflow-x-auto space-x-6 scrollbar-hide"
             : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         }`}>
-          {tourDates.map(show => {
-            const isFav = favorites.some(fav => fav.id === show.id && fav.type === "tour");
+          {concerts.map(show => {
+            const isFav = favorites.some(fav => fav.id === show.id && fav.type === "tour"); //some se fija si un elemento 
+                                                                        //cumple cno la condicion y devuelve true o false
 
             return (
               <div 
@@ -65,7 +35,7 @@ const Tour = ({ horizontal = false }) => {
                 {/*img con gradiente */}
                 <div className="relative w-full h-full">
                   <Image
-                    loader={({ src }) => `http://localhost:4000${src}`}
+                    loader={({ src }) => `${API_URL}${src}`} 
                     src={show.image}
                     alt={show.city}
                     fill
@@ -78,7 +48,7 @@ const Tour = ({ horizontal = false }) => {
                   <h3 className="text-xl font-semibold text-white">{show.city}</h3>
                   <p className="text-gray-300">{show.venue}</p>
                   <p className="text-gray-200 font-medium">
-                    {new Date(show.date).toLocaleDateString("es-AR", {
+                    {new Date(show.date).toLocaleDateString("es-AR", { //convierte la fecha a un formato legible ej 11/12/2025
                       day: "2-digit",
                       month: "long",
                       year: "numeric"

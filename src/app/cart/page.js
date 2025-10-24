@@ -6,7 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 export default function CheckoutPage() {
-  const { cart, incrementCartItem, decrementCartItem, removeFromCart, clearCart } = useAppContext() //agarro del context
+  const {cart, checkout, incrementCartItem, decrementCartItem, removeFromCart, clearCart } = useAppContext() //agarro del context
   const [userEmail, setUserEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -45,34 +45,17 @@ export default function CheckoutPage() {
 
   //manejo checkout
   const handleCheckout = async () => {
-    if (!validateEmail(userEmail)) {
-      setError("por favor ingresa un email válido")
-      return
-    }
-
-    setLoading(true)
-
+    setLoading(true);
     try {
-      const res = await fetch("http://localhost:4000/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cart, userEmail, userName, companyName }), //convierto a string
-      })
-
-      if (res.ok) {
-        const data = await res.json()
-        setOrderNumber(data.orderNumber || "")
-        setSuccess(true)
-      } else {
-        setError("Error al enviar pedido")
-      }
-
+      const data = await checkout({ cart, userEmail, userName, companyName });
+      setOrderNumber(data.orderNumber);
+      setSuccess(true);
     } catch (err) {
-      setError("Error al enviar pedido")
+      setError(err.message || "Error al procesar el pedido");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (groupedCart.length === 0) {
     return (

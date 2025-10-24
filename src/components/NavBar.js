@@ -57,7 +57,7 @@ const Navbar = () => {
                   <span 
                     className={`w-6 h-6 flex items-center justify-center rounded-full bg-green-500 text-black font-bold text-sm transition-opacity duration-500 ${favorites.length > 0 ? 'opacity-100' : 'opacity-0'}`}
                   >
-                    {favorites.length > 0 ? favorites.length : '0'}
+                    {favorites.length > 0 ? favorites.length : '0'} {/*chequea si hay o no algo en favs */}
                   </span>
                 </Link>
               </li>
@@ -69,7 +69,7 @@ const Navbar = () => {
                   <span 
                     className={`w-6 h-6 flex items-center justify-center rounded-full bg-green-500 text-black font-bold text-sm transition-opacity duration-500 ${cart.length > 0 ? 'opacity-100' : 'opacity-0'}`}
                   >
-                    {cart.length > 0 ? cart.length : '0'}
+                    {cart.length > 0 ? cart.length : '0'} {/*chequea si hay o no algo agregado al carrito */}
                   </span>
                 </Link>
               </li>

@@ -17,7 +17,7 @@ const CategoryPage = () => {
   useEffect(() => {
     if (!categories || categories.length === 0) return;
 
-    const cat = categories.find(c => c.slug === slug);
+    const cat = categories.find(c => c.slug === slug); //find busca la categoria con el mismo slug si no hay devuelve undefined
     if (cat) {
       setCategoryId(cat._id);
     } else {
@@ -52,7 +52,8 @@ const CategoryPage = () => {
       </div>
 
       <h2 className="px-10 text-3xl font-bold mb-10 text-left text-white">
-        {categories.find(c => c._id === categoryId)?.name || 'Categoría'}
+        {categories.find(c => c._id === categoryId)?.name || 'Categoría'}{/*find busca la categoria por id 
+                                                          y devuelve su nombre o categoria si no existe */}
       </h2>
 
       {/*grilla con los productos de la categoria */}

@@ -5,8 +5,10 @@ import React, { useState } from "react"
 
 const ProductControls = ({ product, options = [] }) => {
   const { favorites, toggleFavorite, cart, incrementCartItem, decrementCartItem, toggleCart } = useAppContext()
-  const isFavorite = favorites.some(fav => fav.id === product.id)
-  const cartItem = cart.find(item => item.id === product.id)
+  const isFavorite = favorites.some(fav => fav.id === product.id) //revisa si algun favorito tiene el mismo id que el producto 
+                                                                  //y devuelve true o false
+
+  const cartItem = cart.find(item => item.id === product.id) //busca el primer item del carrito que tenga el mismo id que el producto
   const quantity = cartItem ? cartItem.quantity : 0
 
   const [selectedOption, setSelectedOption] = useState(options[0] || "")
@@ -24,7 +26,7 @@ const ProductControls = ({ product, options = [] }) => {
       {options.length > 0 && (
         <select
           value={selectedOption}
-          onChange={e => setSelectedOption(e.target.value)}
+          onChange={e => setSelectedOption(e.target.value)} //cuando cambia guarda el valor seleccionado en selectedOption
           className="text-white bg-transparent border border-gray-500 rounded px-2 py-1 text-sm"
         >
           {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
