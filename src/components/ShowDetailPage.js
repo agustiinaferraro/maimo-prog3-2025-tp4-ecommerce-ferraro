@@ -6,7 +6,7 @@ import Image from "next/image"
 import ProductGrid from "./ProductGrid"
 
 const ShowDetailPage = ({ show }) => {
-  const { toggleCart, cart, API_URL } = useAppContext()
+  const { toggleCart, cart, API_URL, searchTerm } = useAppContext()
 
   //nombre de sector por defecto
   const defaultSectorName = show.sectors[0].name
