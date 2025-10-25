@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useAppContext } from '@/app/context/AppContext';
 import Loading from './Loading';
+import ProductGrid from './ProductGrid';
 
 export default function ProductDetail({ id }) {
   const { 
@@ -15,13 +16,18 @@ export default function ProductDetail({ id }) {
     toggleCart, 
     incrementCartItem, 
     decrementCartItem,
-    addToCardSet
+    addToCardSet, 
+    searchTerm
   } = useAppContext();
+
+  
 
   const [productDetail, setProductDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedSize, setSelectedSize] = useState('');
+
+  
 
   //carga producto y variantes
   useEffect(() => {
@@ -49,6 +55,10 @@ export default function ProductDetail({ id }) {
       item.size === selectedSize &&
       item.logo === selectedVariant?.logo
   );
+
+  if (searchTerm) {
+    return <ProductGrid horizontal />
+  }
 
   return (
     <div className="relative min-h-screen w-full px-5 py-10 flex justify-center">
