@@ -4,9 +4,15 @@ import { useAppContext } from "@/app/context/AppContext"
 import Image from "next/image"
 import Link from "next/link"
 import Loading from "./Loading"
+import ProductGrid from "./ProductGrid";
 
 const Tour = ({ horizontal = false }) => {
-  const { favorites, toggleFavorite, concerts, API_URL } = useAppContext(); // tomo conciertos del context
+  const { favorites, toggleFavorite, concerts, API_URL, searchTerm } = useAppContext(); // tomo conciertos del context
+
+  //si hay busqueda muestra solo la grilla
+  if (searchTerm) {
+    return <ProductGrid horizontal />
+  }
 
   if (!concerts || concerts.length === 0) return <Loading />; //si no hay datos muestro loading
 

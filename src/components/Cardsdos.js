@@ -14,13 +14,16 @@ const Cardsdos = () => {
     fetchConcerts();
   }, [fetchConcerts]);
 
-  //rotacion de ims cada 4 segundos
+  //rotacion de imgs cada 4 segundos
   useEffect(() => {
+    if (concerts.length === 0) return; 
+
     const interval = setInterval(() => {
       setCurrentIndex(prev => (prev + 2) % concerts.length);
     }, 4000);
+
     return () => clearInterval(interval);
-  }, [concerts.length]);
+  }, [concerts]); 
 
   if (concerts.length === 0) return null;
 
@@ -28,52 +31,39 @@ const Cardsdos = () => {
   const secondIndex = (currentIndex + 1) % concerts.length;
 
   return (
-    <div
-      style={{
-        marginTop: "120px",
-        marginBottom: "120px",
-        backgroundImage: "url('/background2.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        padding: "60px 0",
-      }}
-    >
-      <h2 className="px-10 text-4xl font-bold mb-10 text-center text-white">
+    <div className="mt-28 mb-28 bg-[url('/background2.png')] bg-cover bg-center py-16 px-4">
+      <h2 className="text-3xl sm:text-4xl font-bold mb-10 text-center text-white">
         Recitales
       </h2>
 
       {/* contenedor imgs */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-end",
-          gap: "40px",
-          marginBottom: "40px",
-        }}
-      >
+      <div className="flex flex-col sm:flex-row justify-center items-center sm:items-end gap-8 sm:gap-10 mb-10">
         {[firstIndex, secondIndex].map((i, idx) => {
           const show = concerts[i];
+          if (!show) return null; 
+
           return (
             <Link
-              key={`${show.id}-${idx}`}
+              key={`${show._id || i}-${idx}`} 
               href="/tour"
-              className="relative w-[350px] h-[500px] rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105 cursor-pointer"
+              className={`relative rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105 cursor-pointer w-64 sm:w-80 md:w-[350px] h-80 sm:h-[450px] md:h-[500px] ${
+                idx % 2 === 0 ? "sm:mb-20" : "sm:mb-10"
+              }`}
             >
               <Image
-                loader={({ src }) => `${API_URL}${src}`} 
+                loader={({ src }) => `${API_URL}${src}`}
                 src={show.image}
                 alt={show.city}
                 fill
-                style={{ objectFit: "cover" }}
+                className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
             </Link>
-          )
+          );
         })}
       </div>
 
-      {/*boton para ir a entradas */}
+      {/*btn para ir a entradas */}
       <div className="flex justify-center">
         <Link href="/tour">
           <button className="bg-green-500 text-black font-bold py-3 px-8 rounded-lg hover:bg-green-600 transition mt-4 cursor-pointer">
@@ -82,7 +72,7 @@ const Cardsdos = () => {
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Cardsdos;

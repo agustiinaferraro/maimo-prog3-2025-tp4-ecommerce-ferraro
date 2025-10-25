@@ -29,58 +29,35 @@ const Cardsuno = () => {
     fanarts[(startIndex + 1) % fanarts.length]
   ]
 
-  return (
-    <div
-      style={{
-        marginTop: "120px",
-        marginBottom: "120px",
-        backgroundImage: "url('/background1.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        padding: "60px 0",
-      }}
-    >
-      <h2 className="px-10 text-4xl font-bold mb-10 text-center text-white">
-        Fan Art
-      </h2>
+return (
+  <div className="mt-28 mb-28 bg-[url('/background1.png')] bg-cover bg-center py-16 px-4">
+    <h2 className="text-3xl sm:text-4xl font-bold mb-10 text-center text-white">
+      Fan Art
+    </h2>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-end",
-          gap: "40px",
-        }}
-      >
-        {visibleFanarts.map((fanart, idx) => (
-          <div key={fanart._id} style={{ textAlign: "center" }}>
-            <div
-              style={{
-                width: "350px",
-                height: "500px",
-                borderRadius: "15px",
-                overflow: "hidden",
-                boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
-                transition: "transform 0.3s, box-shadow 0.3s",
-                marginBottom: idx % 2 === 0 ? "80px" : "40px",
-                cursor: "pointer"
-              }}
-            >
-              <Image
-                loader={({ src }) => `${API_URL}${src}`} 
-                src={fanart.image}
-                alt={fanart.artist}
-                width={350}
-                height={500}
-                style={{ objectFit: "cover", borderRadius: "15px" }}
-              />
-            </div>
-            <p className="text-white mt-2">{fanart.artist}</p>
+    <div className="flex flex-col sm:flex-row justify-center items-center sm:items-end gap-8 sm:gap-10">
+      {visibleFanarts.map((fanart, idx) => (
+        <div key={fanart._id} className="text-center">
+          <div
+            className={`w-64 sm:w-80 md:w-[350px] h-80 sm:h-[450px] md:h-[500px] rounded-xl overflow-hidden shadow-xl transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer ${
+              idx % 2 === 0 ? "sm:mb-20" : "sm:mb-10"
+            }`}
+          >
+            <Image
+              loader={({ src }) => `${API_URL}${src}`}
+              src={fanart.image}
+              alt={fanart.artist}
+              width={350}
+              height={500}
+              className="object-cover w-full h-full rounded-xl"
+            />
           </div>
-        ))}
-      </div>
+          <p className="text-white mt-2 text-base sm:text-lg">{fanart.artist}</p>
+        </div>
+      ))}
     </div>
-  )
+  </div>
+)
 }
 
 export default Cardsuno;

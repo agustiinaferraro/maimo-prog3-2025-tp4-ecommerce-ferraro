@@ -3,6 +3,7 @@
 import { useAppContext } from "@/app/context/AppContext"
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import ProductGrid from "./ProductGrid"
 
 const ShowDetailPage = ({ show }) => {
   const { toggleCart, cart, API_URL } = useAppContext()
@@ -18,6 +19,10 @@ const ShowDetailPage = ({ show }) => {
   const basePrice = show.basePrice
   const currentQuantity = sectorQuantities[selectedSector.name] || 0
   const totalPrice = ((basePrice * selectedSector.priceModifier) * currentQuantity).toFixed(2) //redondeo a dos decimales
+
+  if (searchTerm) {
+    return <ProductGrid horizontal />
+  }
 
   //agregar al carritooo
   const handleAddToCart = () => {
