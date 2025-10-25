@@ -4,9 +4,10 @@ import { useState } from "react"
 import { useAppContext } from "@/app/context/AppContext"
 import Image from "next/image"
 import Link from "next/link"
+import ProductGrid from "@/components/ProductGrid";
 
 export default function CheckoutPage() {
-  const {cart, checkout, incrementCartItem, decrementCartItem, removeFromCart, clearCart } = useAppContext() //agarro del context
+  const {cart, checkout, incrementCartItem, decrementCartItem, removeFromCart, clearCart, searchTerm } = useAppContext() //agarro del context
   const [userEmail, setUserEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -14,6 +15,11 @@ export default function CheckoutPage() {
   const [orderNumber, setOrderNumber] = useState("")
   const [userName, setUserName] = useState("")
   const [companyName, setCompanyName] = useState("")
+
+
+  if (searchTerm) {
+    return <ProductGrid horizontal />
+  }
 
   // agrupa el carrito por producto (id) sumando cantidades
   const groupedCart = Object.values( //objet.value devuelve un array con las propiedades 
