@@ -6,7 +6,7 @@ import { useState } from "react"
 import { useAppContext } from "@/app/context/AppContext"
 
 const Navbar = () => {
-  const { searchTerm, setSearchTerm, favorites, cart } = useAppContext() // <-- agregamos cart
+  const { searchTerm, setSearchTerm, favorites, cart } = useAppContext()
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
